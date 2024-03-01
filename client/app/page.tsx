@@ -1,9 +1,3 @@
-import Navbar from "@/app/header/navbar/nav";
-
 export default function Home() {
-  return (
-    <div>
-      <p>Home Page</p>
-    </div>
-  );
+  return <p className="bg-blue-600 w-screen h-screen">Home page</p>;
 }
