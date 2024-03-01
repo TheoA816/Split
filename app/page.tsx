@@ -1,3 +1,3 @@
 export default function Home() {
-  return <p>Home page</p>;
+  return <p className="bg-blue-600 w-screen h-screen">Home page</p>;
 }
