@@ -1,4 +1,6 @@
 import React from 'react';
+import { PencilIcon } from '@heroicons/react/24/outline';
+
 
 export default function participants() {
   return (
@@ -11,9 +13,9 @@ export default function participants() {
           <div className="w-2/3 bg-splitBlue h-full absolute inset-0 rounded-md"></div>
         </div>
       </div>
-      <div className="flex">
+      <div className="flex gap-3">
         <div className='text-lg'>$15.00 AUD</div>
-        <div>Pencil</div>
+        <PencilIcon className='w-6 h-6' />
       </div>
     </div>
   );
