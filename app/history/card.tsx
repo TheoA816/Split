@@ -2,18 +2,31 @@ import React from 'react';
 
 export default function Card() {
   return (
-    <div className="w-1/2 border-t border-b border-splitBlue py-4 px-3">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          <div className="w-5 h-5 rounded-full bg-blue-500"></div>
-          <div className="">Maccas</div>
+    <div className="w-full shadow text-splitDarkBlue">
+      <div className="flex items-center justify-between py-3 px-7">
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded-full bg-splitPink"></div>
+          <div>Maccas</div>
         </div>
-        <div>$69.00 AUD</div>
+        <div className='font-bold'>$69.00 AUD</div>
       </div>
-      <div className='flex'>
-        {Array.from({ length: 6 }).map((_, idx) => (
-          <div key={idx} className="w-10 h-10 rounded-full bg-splitBlue -mx-2 border-white border"></div>
-        ))}
+      <div className="flex justify-between items-center border-y border-splitBlue py-3 px-7">
+        <div className="flex ml-2">
+          {Array.from({ length: 6 }).map((_, idx) => (
+            <div
+              key={idx}
+              className="w-10 h-10 rounded-full bg-splitBlue -mx-2 border-white border"
+            ></div>
+          ))}
+        </div>
+        <div className="flex flex-col items-end">
+          <div className='font-bold text-xl'>80%</div>
+          <div className='text-splitBlack50 opacity-50'>Paid</div>
+        </div>
+      </div>
+      <div className='flex justify-between py-3 items-center px-7'>
+        <div className='text-splitBlack50 opacity-50 text-sm'>Mar 1st 2024 · 00:33</div>
+        <button className='border border-splitBlack50 border-opacity-50 rounded-2xl px-6 py-1 text-splitDarkBlue'>View Details</button>
       </div>
     </div>
   );
