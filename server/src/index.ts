@@ -104,6 +104,41 @@ app.get("/history", verifySession, async (req: Request, res: Response, next: Nex
     } catch (err) {
       next(err);
     }
+});
+
+app.get("/statistics", verifySession, async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Responding to GET /statistics");
+    try {
+      const totalExpenses = await prisma.billToUser.aggregate({
+        where: {
+          userId: Number(req.headers.id),
+        },
+        _sum: {
+          paid: true
+        }
+      });
+      const userOwed = await prisma.billToUser.aggregate({
+        where: {
+          userId: Number(req.headers.id),
+        },
+        _sum: {
+          owed: true
+        }
+      });
+      const peopleOwed = await prisma.billToUser.aggregate({
+        where: {
+          bill: {
+            userId: Number(req.headers.id)
+          }
+        },
+        _sum: {
+          owed: true
+        }
+      });
+      return { totalExpenses, userOwed, peopleOwed };
+    } catch (err) {
+      next(err);
+    }
 
 });
 
