@@ -5,6 +5,7 @@ import { validateRequest, verifySession } from "./lib/middleware";
 import { UserSignupSchema } from "./schema/user.schema";
 import { signoutUser, signupUser } from "./functions/auth";
 import prisma from "./lib/prisma";
+import { error } from "console";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
@@ -46,6 +47,75 @@ app.post(
     }
   }
 );
+
+app.post(
+  "/add/friend/:billId",
+  verifySession,
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Responding to POST /add/friend/:billId");
+    try {
+      const billId = Number(req.params.billId);
+      const email = req.body;
+      const friend = await prisma.user.findUnique({
+        where: {email}
+      });
+      if (!friend) {
+        return res.status(400).json("error lol") 
+      }
+
+      const updatedBill = await prisma.bill.update({
+        where: {id: billId},
+        data: {
+          users: {
+            connect: {id: friend.id}
+          }
+        }
+      });
+      return res.status(200).json(updatedBill);
+    } catch (err) {
+      next(err);
+    }
+  }
+)
+
+app.post(
+  "/add/friend",
+  verifySession,
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Responding to POST /add/friend");
+    try {
+      const currentUserId = Number(req.headers.id);
+      const email = req.body;
+      const targetUser = await prisma.user.findUnique({
+        where: {email}
+      });
+      if (!targetUser) {
+        return res.status(400).json("errorrrrr");
+      }
+      // will add the target user to the current user's friends list
+      await prisma.user.update({
+        where:{id:currentUserId},
+        data: {
+          friends: {
+            connect: { id: targetUser.id }
+          }
+        }
+      });
+      // add current user as friend to the target user
+      await prisma.user.update({
+        where: { id:targetUser.id},
+        data: {
+          friends: {
+            connect: {id: currentUserId}
+          }
+        }
+      });
+      return res.status(200).json({ message: "Friend added yay" });
+    } catch (err) {
+      next(err);
+    }
+  }
+)
 
 app.get(
   "/friends",
