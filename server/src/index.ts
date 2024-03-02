@@ -10,12 +10,13 @@ import { error } from "console";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/read-receipt", readReceipt);
+app.post("/read-receipt", readReceipt);
 
 app.post(
   "/auth/signup",

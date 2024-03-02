@@ -1,15 +1,11 @@
-import crypto from "crypto";
 import { Request, Response } from "express";
-
-const clientId = "vrfbFlV6l4Ert25zpmZUrrWSlbLrpIPNcAVLrUP";
-const username = "hsuputra";
-const apiKey = "c286d028ddb8519dc093dacf722a98cb";
 
 export const readReceipt = async (req: Request, res: Response) => {
   try {
+    const { receiptUrl } = req.body;
+
     const data = JSON.stringify({
-      file_url:
-        "https://veryfi-testing-public.s3.us-west-2.amazonaws.com/receipt.jpg",
+      file_url: receiptUrl,
     });
 
     const url = "https://api.veryfi.com/api/v8/partner/documents";
