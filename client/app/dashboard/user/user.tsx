@@ -30,8 +30,7 @@ const userCards = [
     bgUrl: "/money_bag.png",
     icon: <DollarIcon />,
     iconClass: "bg-splitBlue",
-    iconBot: "0",
-    iconRight: "5",
+    imgClass: "bottom-0 right-5",
   },
   {
     label: "People owed you",
@@ -40,8 +39,7 @@ const userCards = [
     bgUrl: "/coins.png",
     icon: <ArrowTrendingUpIcon className="h-6 w-6" />,
     iconClass: "bg-splitYellow",
-    iconBot: "5",
-    iconRight: "0",
+    imgClass: "bottom-5 right-0",
   },
   {
     label: "You owed",
@@ -50,8 +48,7 @@ const userCards = [
     bgUrl: "/rabbit_bill.png",
     icon: <ArrowTrendingDownIcon className="h-6 w-6" />,
     iconClass: "bg-splitPink",
-    iconBot: "5",
-    iconRight: "0",
+    imgClass: "bottom-5 right-0",
   },
 ];
 
@@ -77,8 +74,7 @@ export default function User() {
             bgUrl={card.bgUrl}
             icon={card.icon}
             iconClass={card.iconClass}
-            iconBot={card.iconBot}
-            iconRight={card.iconRight}
+            imgClass={card.imgClass}
           />
         ))}
       </div>

@@ -16,7 +16,7 @@ export default function History() {
         </Link>
       </div>
       {/* Bills (TODO: update with actual bills) */}
-      <div className="flex gap-3">
+      <div className="flex gap-3 overflow-scroll">
         {bills.map((bill) => (
           <Bill />
         ))}

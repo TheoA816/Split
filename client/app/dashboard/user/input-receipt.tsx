@@ -37,7 +37,7 @@ const EditIcon = () => (
 
 export default function InputReceipt() {
   return (
-    <div className="flex gap-4">
+    <div className="flex flex-col md:flex-row gap-4">
       <Button className="py-4 px-8 flex gap-3 rounded-full text-white bg-splitDarkBlue text-md">
         <ScanIcon />
         Scan a receipt
