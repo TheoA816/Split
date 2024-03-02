@@ -1,0 +1,41 @@
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - server
+    container_name: client
+    ports:
+      - 3000:3000
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    container_name: server
+    ports:
+      - 3030:3030
+    environment:
+      NODE_ENV: production
+      POSTGRESQL_HOST: postgres
+      POSTGRESQL_USER: postgres
+      POSTGRESQL_PASSWORD: password
+      POSTGRESQL_DATABASE: mydb
+      DATABASE_URL: "postgresql://postgres:password@postgres:5432/mydb?schema=public"
+    volumes:
+      - ./src:/home/app/src
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
