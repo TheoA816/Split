@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useFormState, useFormStatus } from "react-dom";
+import { authenticate } from "@/app/lib/actions";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import Image from "next/image";
@@ -10,10 +12,14 @@ import signUpArtwork from "../assets/signup-artwork.svg";
 import signUpKey from "../assets/signup-key.svg";
 
 export default function SignUpPage() {
+	const { pending } = useFormStatus();
+
 	const [email, setEmail] = useState<String>("");
 	const [password, setPassword] = useState<String>("");
+	const [errorMessage, dispatch] = useFormState(authenticate, undefined);
 
 	return (
+		// <form action={dispatch} className="space-y-3">
 		<div className="flex col w-screen h-screen flex-wrap">
 			<div className="bg-splitBlue h-full w-3/5">
 				<Image
@@ -54,6 +60,7 @@ export default function SignUpPage() {
 						onClick={() => {
 							console.log("clicked");
 						}}
+						aria-disabled={pending}
 					>
 						Sign up
 					</Button>
