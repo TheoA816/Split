@@ -3,30 +3,22 @@ import cors from "cors";
 import errorHandler from "middleware-http-errors";
 import { validateRequest, verifySession } from "./lib/middleware";
 import { UserSignupSchema } from "./schema/user.schema";
-<<<<<<< HEAD
-import { loginUser } from "./functions/auth";
-=======
 import { signoutUser, signupUser } from "./functions/auth";
->>>>>>> 4992bac26de60cbd135111fc09a411afbf1bb290
 import prisma from "./lib/prisma";
 
 const app = express();
 const port = process.env.PORT ?? 3030;
 
-<<<<<<< HEAD
 type UpdateUserData = {
   name?: string;
   profilePicture?: string;
   password?: string;
 };
 
-=======
->>>>>>> 4992bac26de60cbd135111fc09a411afbf1bb290
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-<<<<<<< HEAD
 app.post("/update-user", async (req, res) => {
   try {
     const { name, profilePicture, password, id } = req.body;
@@ -70,7 +62,7 @@ app.post("/update-user", async (req, res) => {
 
 app.post("/create-bill", async (req, res) => {
   try {
-    const { title, userId, items } = req.body;
+    const { title, userId, items, owed, paid } = req.body;
     const token = req.headers.authorization;
 
     if (!token) {
@@ -93,6 +85,8 @@ app.post("/create-bill", async (req, res) => {
       data: {
         billId: bill.id,
         userId: userId,
+        owed: owed,
+        paid: paid,
       },
     });
 
@@ -107,8 +101,6 @@ app.post("/create-bill", async (req, res) => {
   }
 });
 
-=======
->>>>>>> 4992bac26de60cbd135111fc09a411afbf1bb290
 app.post(
   "/auth/signup",
   validateRequest(UserSignupSchema, "body"),
@@ -120,20 +112,12 @@ app.post(
         token: string;
         expiredBy: Date;
         userId: number;
-<<<<<<< HEAD
-      } = await loginUser(email, password);
-=======
-      } = await signupUser(username, password);
->>>>>>> 4992bac26de60cbd135111fc09a411afbf1bb290
+      } = await signupUser(email, password);
       return res.status(200).json(result);
     } catch (err) {
       next(err);
     }
-<<<<<<< HEAD
   },
-);
-=======
-  }
 );
 
 app.post(
@@ -148,7 +132,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 app.get(
@@ -178,10 +162,13 @@ app.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
-app.get("/history", verifySession, async (req: Request, res: Response, next: NextFunction) => {
+app.get(
+  "/history",
+  verifySession,
+  async (req: Request, res: Response, next: NextFunction) => {
     console.log("Responding to GET /history");
     try {
       const histories = await prisma.bill.findMany({
@@ -196,9 +183,9 @@ app.get("/history", verifySession, async (req: Request, res: Response, next: Nex
           items: {
             select: {
               name: true,
-              cost: true
-            }
-          }
+              cost: true,
+            },
+          },
         },
         orderBy: {
           title: "asc",
@@ -208,9 +195,13 @@ app.get("/history", verifySession, async (req: Request, res: Response, next: Nex
     } catch (err) {
       next(err);
     }
-});
+  },
+);
 
-app.get("/statistics", verifySession, async (req: Request, res: Response, next: NextFunction) => {
+app.get(
+  "/statistics",
+  verifySession,
+  async (req: Request, res: Response, next: NextFunction) => {
     console.log("Responding to GET /statistics");
     try {
       const totalExpenses = await prisma.billToUser.aggregate({
@@ -218,34 +209,33 @@ app.get("/statistics", verifySession, async (req: Request, res: Response, next: 
           userId: Number(req.headers.id),
         },
         _sum: {
-          paid: true
-        }
+          paid: true,
+        },
       });
       const userOwed = await prisma.billToUser.aggregate({
         where: {
           userId: Number(req.headers.id),
         },
         _sum: {
-          owed: true
-        }
+          owed: true,
+        },
       });
       const peopleOwed = await prisma.billToUser.aggregate({
         where: {
           bill: {
-            userId: Number(req.headers.id)
-          }
+            userId: Number(req.headers.id),
+          },
         },
         _sum: {
-          owed: true
-        }
+          owed: true,
+        },
       });
       return { totalExpenses, userOwed, peopleOwed };
     } catch (err) {
       next(err);
     }
-
-});
->>>>>>> 4992bac26de60cbd135111fc09a411afbf1bb290
+  },
+);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

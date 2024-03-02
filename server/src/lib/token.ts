@@ -13,7 +13,7 @@ export const generateToken = (userId: number) => {
 
 export const verifyToken = async (
   token: string | undefined,
-  userId: number | undefined
+  userId: number | undefined,
 ) => {
   const secret = process.env.JWT_SECRET as string;
 
