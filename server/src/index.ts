@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.get('/update-user', async (req, res) => {
+app.post('/update-user', async (req, res) => {
   try {
     const { name, profilePicture, password, id } = req.body;
     const token = req.headers.authorization;
