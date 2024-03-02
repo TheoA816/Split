@@ -6,7 +6,7 @@ import prisma from "./prisma";
 
 export const validateRequest = (
   schema: ZodSchema,
-  property: "body" | "query"
+  property: "body" | "query",
 ) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const result = schema.safeParse(req[property]);
@@ -24,7 +24,7 @@ export const validateRequest = (
 export const verifySession = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const secret = process.env.JWT_SECRET as string;
   const { authorization: token } = req.headers;

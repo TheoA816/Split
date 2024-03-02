@@ -5,14 +5,18 @@ import { validateRequest, verifySession } from "./lib/middleware";
 import { UserSignupSchema } from "./schema/user.schema";
 import { signoutUser, signupUser } from "./functions/auth";
 import prisma from "./lib/prisma";
+import { readReceipt } from "./functions/ocr";
 import { error } from "console";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+app.post("/read-receipt", readReceipt);
 
 app.post(
   "/auth/signup",
@@ -55,22 +59,30 @@ app.post(
     console.log("Responding to POST /add/friend/:billId");
     try {
       const billId = Number(req.params.billId);
-      const email = req.body;
+
+      // check if billId is valid
+      const bill = await prisma.bill.findUnique({
+        where: { id: billId },
+      });
+
+      if (!bill) return res.status(400).json("error lol");
+
+      const { email, owed, paid } = req.body;
       const friend = await prisma.user.findUnique({
         where: { email },
       });
-      if (!friend) {
-        return res.status(400).json("error lol");
-      }
 
-      const updatedBill = await prisma.bill.update({
-        where: { id: billId },
+      if (!friend) return res.status(400).json("error lol");
+
+      const updatedBill = await prisma.billToUser.create({
         data: {
-          user: {
-            connect: { id: friend.id },
-          },
+          billId: bill.id,
+          userId: friend.id,
+          owed: owed,
+          paid: paid,
         },
       });
+
       return res.status(200).json(updatedBill);
     } catch (err) {
       next(err);
