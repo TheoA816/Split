@@ -39,7 +39,7 @@ export default function Page() {
         <h1 className="font-bold text-3xl font-balsamiq-sans text-splitDarkBlue pb-3">Add friends</h1>
         <FriendRequest></FriendRequest>
         <h1 className="font-bold text-3xl font-balsamiq-sans text-splitDarkBlue pt-3">Friends list</h1>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {/* Loop through dummy data array */}
           {dummyData.map((friend, index) => (
           <FriendComponent
