@@ -14,7 +14,7 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<body className={`${balsamiqSans.className} px-12`}>
+			<body className={`${balsamiqSans.className}`}>
 				{/* <Header /> */}
 				{children}
 			</body>
