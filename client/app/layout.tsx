@@ -1,5 +1,4 @@
 import "@/app/globals.css";
-import Header from "@/app/header/header";
 import { balsamiqSans } from "./fonts";
 
 export const metadata = {
@@ -14,10 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${balsamiqSans.className} px-12`}>
-        <Header />
-        {children}
-      </body>
+      <body className={`${balsamiqSans.className} px-12`}>{children}</body>
     </html>
   );
 }

@@ -18,7 +18,7 @@ const HistoryIcon = () => (
 const navLinks = [
   {
     icon: <HomeIcon className="h-6 w-6" />,
-    url: "/",
+    url: "/dashboard",
     label: "Home",
   },
   {
@@ -35,7 +35,7 @@ const navLinks = [
 
 export default function Navbar() {
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 py-12">
       {navLinks.map((link) => (
         <NavButton
           key={link.label}

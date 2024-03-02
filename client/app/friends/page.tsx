@@ -1,3 +1,4 @@
+import Navbar from "../header/navbar/nav";
 import FriendComponent from "./friend";
 import { FriendRequest } from "./friendrequest";
 
@@ -41,6 +42,7 @@ export default function Page() {
   ];
 
   return (
+<<<<<<< HEAD
     <div className="space-y-8">
       <div className="space-y-4">
         <h1 className="font-bold text-3xl font-balsamiq-sans text-splitDarkBlue">
@@ -53,6 +55,19 @@ export default function Page() {
           Friends list
         </h1>
         <div className="grid gap-4 grid-cols-3">
+=======
+    <>
+      <Navbar />
+      <div className="">
+        <h1 className="font-bold text-3xl font-balsamiq-sans text-splitDarkBlue pb-3">
+          Add friends
+        </h1>
+        <FriendRequest></FriendRequest>
+        <h1 className="font-bold text-3xl font-balsamiq-sans text-splitDarkBlue pt-3">
+          Friends list
+        </h1>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+>>>>>>> 359e30150e71351eff03fe2330e5b63764113426
           {/* Loop through dummy data array */}
           {dummyData.map((friend, index) => (
             <FriendComponent
@@ -63,6 +78,10 @@ export default function Page() {
           ))}
         </div>
       </div>
+<<<<<<< HEAD
     </div>
+=======
+    </>
+>>>>>>> 359e30150e71351eff03fe2330e5b63764113426
   );
 }
