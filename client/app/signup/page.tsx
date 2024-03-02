@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, FormEvent } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { authenticate } from "@/app/lib/actions";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import Image from "next/image";
@@ -12,11 +14,40 @@ import signUpArtwork from "../assets/signup-artwork.svg";
 import signUpKey from "../assets/signup-key.svg";
 
 export default function SignUpPage() {
+	const router = useRouter();
 	const { pending } = useFormStatus();
 
 	const [email, setEmail] = useState<String>("");
 	const [password, setPassword] = useState<String>("");
-	const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+	const [error, setError] = useState<String>("");
+	const [loading, setLoading] = useState<boolean>(false);
+
+	const readyToSubmit = useMemo(() => email && password, [email, password]);
+
+	const handleOnSubmit = async (e: FormEvent) => {
+		e.preventDefault();
+		const target = e.target as HTMLFormElement;
+		setLoading(true);
+		try {
+			const res = await signIn("credentials", {
+				redirect: false,
+				email: target.email.value,
+				password: target.password.value,
+				callbackUrl: "/add-friends",
+			});
+
+			setLoading(false);
+
+			if (!res?.error) {
+				router.push("/signup");
+			} else {
+				setError("Invalid username or password");
+			}
+		} catch (err: any) {
+			setLoading(false);
+			setError(err.message);
+		}
+	};
 
 	return (
 		// <form action={dispatch} className="space-y-3">
@@ -45,11 +76,13 @@ export default function SignUpPage() {
 						type="email"
 						placeholder="Email"
 						className="rounded-2xl w-full pl-4 bg-splitBlue bg-opacity-10 h-14 text-black text-opacity-50 outline-none"
+						onChange={(e) => setEmail(e.target.value)}
 					/>
 					<input
 						type="password"
 						placeholder="Password"
 						className="rounded-2xl flex-grow pl-4 bg-splitBlue bg-opacity-10 h-14 text-black text-opacity-50 outline-none"
+						onChange={(e) => setPassword(e.target.value)}
 					/>
 					<Button
 						className={clsx(
@@ -57,10 +90,8 @@ export default function SignUpPage() {
 							"hover:bg-splitDarkBlue hover:bg-opacity-25 hover:opacity-100 hover:text-splitDarkBlue",
 							"rounded-2xl flex-grow pl-4 h-14"
 						)}
-						onClick={() => {
-							console.log("clicked");
-						}}
-						aria-disabled={pending}
+						onClick={handleOnSubmit}
+						aria-disabled={!readyToSubmit || loading}
 					>
 						Sign up
 					</Button>
