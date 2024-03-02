@@ -35,7 +35,7 @@ export default function Page() {
   ];
 
   return (
-      <div className="px-12">
+      <div className="">
         <h1 className="font-bold text-3xl font-balsamiq-sans text-splitDarkBlue pb-3">Add friends</h1>
         <FriendRequest></FriendRequest>
         <h1 className="font-bold text-3xl font-balsamiq-sans text-splitDarkBlue pt-3">Friends list</h1>
