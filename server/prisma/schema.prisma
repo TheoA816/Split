@@ -11,7 +11,41 @@ datasource db {
 }
 
 model User {
-    id    Int     @id @default(autoincrement())
-    email String  @unique
-    name  String?
+    id             Int          @id @default(autoincrement())
+    email          String       @unique
+    name           String
+    profilePicture String
+    password       String
+    Bill           Bill[]
+    BillToUser     BillToUser[]
+    friends        User[]       @relation("friends")
+    friendOf       User[]       @relation("friends")
+}
+
+model Bill {
+    id         Int          @id @default(autoincrement())
+    title      String
+    issuedBy   User         @relation(fields: [userId], references: [id])
+    completed  Boolean
+    userId     Int
+    createdAt  DateTime
+    items      Item[]
+    BillToUser BillToUser[]
+}
+
+model Item {
+    id     Int    @id @default(autoincrement())
+    name   String
+    cost   String
+    Bill   Bill?  @relation(fields: [billId], references: [id])
+    billId Int?
+}
+
+model BillToUser {
+    bill   Bill @relation(fields: [billId], references: [id])
+    user   User @relation(fields: [userId], references: [id])
+    billId Int
+    userId Int
+
+    @@unique([billId, userId])
 }
