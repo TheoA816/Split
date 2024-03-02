@@ -7,12 +7,12 @@ import Image from "next/image";
 export default function page() {
   return (
     <div className="text-splitBlack50">
-      <button className="flex items-center gap-3 mb-7 ml-7">
-        <ArrowLeftIcon className="w-4 h-4" />
-        <div className="font-semibold text-lg">Back</div>
-      </button>
-      <div className="flex pb-10">
+      <div className="flex">
         <div className="px-16 py-10 flex-1 flex flex-col justify-center">
+          <button className="flex items-center gap-3 mb-7">
+            <ArrowLeftIcon className="w-4 h-4" />
+            <div className="font-semibold text-lg">Back</div>
+          </button>
           <div className="flex flex-col justify-center">
             <div className="flex flex-col gap-10">
               <div className="flex justify-between">
