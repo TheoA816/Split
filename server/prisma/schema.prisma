@@ -37,16 +37,18 @@ model Bill {
 model Item {
     id     Int    @id @default(autoincrement())
     name   String
-    cost   String
+    cost   Float
     Bill   Bill?  @relation(fields: [billId], references: [id])
     billId Int?
 }
 
 model BillToUser {
-    bill   Bill @relation(fields: [billId], references: [id])
-    user   User @relation(fields: [userId], references: [id])
+    bill   Bill  @relation(fields: [billId], references: [id])
+    user   User  @relation(fields: [userId], references: [id])
     billId Int
     userId Int
+    owed   Float
+    paid   Float
 
     @@unique([billId, userId])
 }
