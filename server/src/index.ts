@@ -5,6 +5,7 @@ import { validateRequest, verifySession } from "./lib/middleware";
 import { UserSignupSchema } from "./schema/user.schema";
 import { signoutUser, signupUser } from "./functions/auth";
 import prisma from "./lib/prisma";
+import { error } from "console";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
@@ -29,7 +30,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 app.post(
@@ -44,7 +45,82 @@ app.post(
     } catch (err) {
       next(err);
     }
-  }
+  },
+);
+
+app.post(
+  "/add/friend/:billId",
+  verifySession,
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Responding to POST /add/friend/:billId");
+    try {
+      const billId = Number(req.params.billId);
+      const email = req.body;
+      const friend = await prisma.user.findUnique({
+        where: { email },
+      });
+      if (!friend) {
+        return res.status(400).json("error lol");
+      }
+
+      const updatedBill = await prisma.bill.update({
+        where: { id: billId },
+        data: {
+          users: {
+            connect: { id: friend.id },
+          },
+        },
+      });
+      return res.status(200).json(updatedBill);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+app.post(
+  "/add/friend",
+  verifySession,
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Responding to POST /add/friend");
+    try {
+      const currentUserId = Number(req.headers.id);
+      const { email } = req.body;
+      const targetUser = await prisma.user.findUnique({
+        where: {
+          email,
+        },
+      });
+      if (!targetUser) {
+        return res.status(400).json("errorrrrr");
+      }
+      // will add the target user to the current user's friends list
+      await prisma.user.update({
+        where: {
+          id: currentUserId,
+        },
+        data: {
+          friends: {
+            connect: {
+              id: targetUser.id,
+            },
+          },
+        },
+      });
+      // add current user as friend to the target user
+      await prisma.user.update({
+        where: { id: targetUser.id },
+        data: {
+          friends: {
+            connect: { id: currentUserId },
+          },
+        },
+      });
+      return res.status(200).json({ message: "Friend added yay" });
+    } catch (err) {
+      next(err);
+    }
+  },
 );
 
 app.get(
@@ -74,10 +150,13 @@ app.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
-app.get("/history", verifySession, async (req: Request, res: Response, next: NextFunction) => {
+app.get(
+  "/history",
+  verifySession,
+  async (req: Request, res: Response, next: NextFunction) => {
     console.log("Responding to GET /history");
     try {
       const histories = await prisma.bill.findMany({
@@ -92,9 +171,9 @@ app.get("/history", verifySession, async (req: Request, res: Response, next: Nex
           items: {
             select: {
               name: true,
-              cost: true
-            }
-          }
+              cost: true,
+            },
+          },
         },
         orderBy: {
           title: "asc",
@@ -104,9 +183,13 @@ app.get("/history", verifySession, async (req: Request, res: Response, next: Nex
     } catch (err) {
       next(err);
     }
-});
+  },
+);
 
-app.get("/statistics", verifySession, async (req: Request, res: Response, next: NextFunction) => {
+app.get(
+  "/statistics",
+  verifySession,
+  async (req: Request, res: Response, next: NextFunction) => {
     console.log("Responding to GET /statistics");
     try {
       const totalExpenses = await prisma.billToUser.aggregate({
@@ -114,33 +197,33 @@ app.get("/statistics", verifySession, async (req: Request, res: Response, next: 
           userId: Number(req.headers.id),
         },
         _sum: {
-          paid: true
-        }
+          paid: true,
+        },
       });
       const userOwed = await prisma.billToUser.aggregate({
         where: {
           userId: Number(req.headers.id),
         },
         _sum: {
-          owed: true
-        }
+          owed: true,
+        },
       });
       const peopleOwed = await prisma.billToUser.aggregate({
         where: {
           bill: {
-            userId: Number(req.headers.id)
-          }
+            userId: Number(req.headers.id),
+          },
         },
         _sum: {
-          owed: true
-        }
+          owed: true,
+        },
       });
       return { totalExpenses, userOwed, peopleOwed };
     } catch (err) {
       next(err);
     }
-
-});
+  },
+);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
