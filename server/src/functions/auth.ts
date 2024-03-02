@@ -57,3 +57,15 @@ export const signupUser = async (
     userId: user.id,
   };
 };
+
+export const signoutUser = async (token: string): Promise<object> => {
+  // Assuming that token and userId already verified
+  // Delete token immediately
+  await prisma.token.delete({
+    where: {
+      token: getHash(token),
+    },
+  });
+  console.log(`Token ${token} deleted.`);
+  return {};
+};
