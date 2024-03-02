@@ -12,8 +12,8 @@ export default function page() {
         <div className="font-semibold text-lg">Back</div>
       </button>
       <div className="flex pb-10">
-        <div className="px-16 py-10  flex-1">
-          <div className="">
+        <div className="px-16 py-10 flex-1 flex flex-col justify-center">
+          <div className="flex flex-col justify-center">
             <div className="flex flex-col gap-10">
               <div className="flex justify-between">
                 <div>
@@ -69,7 +69,7 @@ export default function page() {
               </div>
             </div>
           </div>
-          <button className="border w-full py-3 mb-5 mt-16 border-dashed border-splitDarkBlue rounded-xl font-bold text-splitDarkBlue">
+          <button className="border w-full py-3 mb-5 mt-24 border-dashed border-splitDarkBlue rounded-xl font-bold text-splitDarkBlue">
             Add participants
           </button>
           <button className="border w-full py-3 rounded-xl bg-splitDarkBlue text-splitWhite font-bold">
