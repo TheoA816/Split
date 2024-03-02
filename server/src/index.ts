@@ -5,6 +5,7 @@ import { validateRequest, verifySession } from "./lib/middleware";
 import { UserSignupSchema } from "./schema/user.schema";
 import { signoutUser, signupUser } from "./functions/auth";
 import prisma from "./lib/prisma";
+import { readReceipt } from "./functions/ocr";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
@@ -12,6 +13,8 @@ const port = process.env.PORT ?? 3000;
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+app.get("/read-receipt", readReceipt);
 
 app.post(
   "/auth/signup",
@@ -29,7 +32,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 app.post(
@@ -44,7 +47,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 app.get(
@@ -74,10 +77,13 @@ app.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
-app.get("/history", verifySession, async (req: Request, res: Response, next: NextFunction) => {
+app.get(
+  "/history",
+  verifySession,
+  async (req: Request, res: Response, next: NextFunction) => {
     console.log("Responding to GET /history");
     try {
       const histories = await prisma.bill.findMany({
@@ -92,9 +98,9 @@ app.get("/history", verifySession, async (req: Request, res: Response, next: Nex
           items: {
             select: {
               name: true,
-              cost: true
-            }
-          }
+              cost: true,
+            },
+          },
         },
         orderBy: {
           title: "asc",
@@ -104,9 +110,13 @@ app.get("/history", verifySession, async (req: Request, res: Response, next: Nex
     } catch (err) {
       next(err);
     }
-});
+  },
+);
 
-app.get("/statistics", verifySession, async (req: Request, res: Response, next: NextFunction) => {
+app.get(
+  "/statistics",
+  verifySession,
+  async (req: Request, res: Response, next: NextFunction) => {
     console.log("Responding to GET /statistics");
     try {
       const totalExpenses = await prisma.billToUser.aggregate({
@@ -114,33 +124,33 @@ app.get("/statistics", verifySession, async (req: Request, res: Response, next: 
           userId: Number(req.headers.id),
         },
         _sum: {
-          paid: true
-        }
+          paid: true,
+        },
       });
       const userOwed = await prisma.billToUser.aggregate({
         where: {
           userId: Number(req.headers.id),
         },
         _sum: {
-          owed: true
-        }
+          owed: true,
+        },
       });
       const peopleOwed = await prisma.billToUser.aggregate({
         where: {
           bill: {
-            userId: Number(req.headers.id)
-          }
+            userId: Number(req.headers.id),
+          },
         },
         _sum: {
-          owed: true
-        }
+          owed: true,
+        },
       });
       return { totalExpenses, userOwed, peopleOwed };
     } catch (err) {
       next(err);
     }
-
-});
+  },
+);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
