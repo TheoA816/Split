@@ -59,7 +59,7 @@ export default function User() {
         <div>
           <div className="text-splitDarkBlue text-3xl">Hey, Username! 👋🏻</div>
           <div className="text-splitBlack50 opacity-50">
-            This is what we've got for you today
+            This is what we&apos;ve got for you today
           </div>
         </div>
         <InputReceipt />
