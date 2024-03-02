@@ -7,7 +7,7 @@ import { loginUser } from "./functions/auth";
 import prisma from "./lib/prisma";
 
 const app = express();
-const port = process.env.PORT ?? 3000;
+const port = process.env.PORT ?? 3030;
 
 type UpdateUserData = {
   name?: string;
@@ -60,8 +60,43 @@ app.post("/update-user", async (req, res) => {
   }
 });
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+app.post("/create-bill", async (req, res) => {
+  try {
+    const { title, userId, items } = req.body;
+    const token = req.headers.authorization;
+
+    if (!token) {
+      return res.status(403).json({ error: "Unauthorized access" });
+    }
+
+    const bill = await prisma.bill.create({
+      data: {
+        title: title,
+        completed: false,
+        createdAt: new Date(),
+        issuedBy: { connect: { id: userId } },
+        items: {
+          create: [...items],
+        },
+      },
+    });
+
+    await prisma.billToUser.create({
+      data: {
+        billId: bill.id,
+        userId: userId,
+      },
+    });
+
+    return res.json({ billId: bill.id });
+  } catch (err) {
+    if (err instanceof Error) {
+      return res
+        .status(500)
+        .json({ error: "Internal Server Error" + err.message });
+    }
+    return res.status(500).json({ error: err });
+  }
 });
 
 app.post(

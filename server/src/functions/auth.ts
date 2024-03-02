@@ -5,7 +5,7 @@ import { generateToken } from "../lib/token";
 
 export const loginUser = async (
   email: string,
-  password: string
+  password: string,
 ): Promise<{ token: string; expiredBy: Date; userId: number }> => {
   // Check if email or password is valid
   if (!email || !password) {
