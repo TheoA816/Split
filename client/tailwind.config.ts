@@ -21,9 +21,9 @@ const config = {
       colors: {
         splitBlue: "#8BC3FE",
         splitDarkBlue: "#3F6AB7",
-        splitWhite: "#3F6AB7",
+        splitWhite: "#FFFFFF",
         splitYellow: "#F5EE9E",
-        splitBlue5: "#3F6AB7",
+        splitBlue5: "#8BC3FE",
         splitBlack50: "#3F6AB7",
         splitBlue25: "#8BC3FE",
         splitPink: "#F88DAD",

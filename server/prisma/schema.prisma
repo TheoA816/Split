@@ -11,7 +11,53 @@ datasource db {
 }
 
 model User {
-    id    Int     @id @default(autoincrement())
-    email String  @unique
-    name  String?
+    id             Int          @id @default(autoincrement())
+    email          String       @unique
+    name           String
+    profilePicture String
+    password       String
+    Bill           Bill[]
+    BillToUser     BillToUser[]
+    friends        User[]       @relation("friends")
+    friendOf       User[]       @relation("friends")
+    Token          Token[]
+}
+
+model Bill {
+    id         Int          @id @default(autoincrement())
+    title      String
+    issuedBy   User         @relation(fields: [userId], references: [id])
+    completed  Boolean
+    userId     Int
+    createdAt  DateTime
+    items      Item[]
+    BillToUser BillToUser[]
+}
+
+model Item {
+    id     Int    @id @default(autoincrement())
+    name   String
+    cost   Float
+    Bill   Bill?  @relation(fields: [billId], references: [id])
+    billId Int?
+}
+
+model BillToUser {
+    bill   Bill  @relation(fields: [billId], references: [id])
+    user   User  @relation(fields: [userId], references: [id])
+    billId Int
+    userId Int
+    owed   Float
+    paid   Float
+
+    @@unique([billId, userId])
+}
+
+model Token {
+    id        String   @id @default(uuid())
+    token     String   @unique
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    Int
+    createdAt DateTime @default(now())
+    expiredBy DateTime
 }
