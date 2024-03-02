@@ -20,6 +20,7 @@ model User {
     BillToUser     BillToUser[]
     friends        User[]       @relation("friends")
     friendOf       User[]       @relation("friends")
+    Token          Token[]
 }
 
 model Bill {
@@ -48,4 +49,13 @@ model BillToUser {
     userId Int
 
     @@unique([billId, userId])
+}
+
+model Token {
+    id        String   @id @default(uuid())
+    token     String   @unique
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    Int
+    createdAt DateTime @default(now())
+    expiredBy DateTime
 }

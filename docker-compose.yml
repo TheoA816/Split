@@ -27,6 +27,7 @@ services:
       POSTGRESQL_USER: postgres
       POSTGRESQL_PASSWORD: password
       POSTGRESQL_DATABASE: mydb
+      JWT_SECRET: secret
       DATABASE_URL: "postgresql://postgres:password@postgres:5432/mydb?schema=public"
     volumes:
       - ./src:/home/app/src
