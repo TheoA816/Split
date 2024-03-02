@@ -51,10 +51,10 @@ export default function page() {
                   <div className="opacity-75">$6.9</div>
                 </div>
                 <div className="flex justify-between">
-                  <div className="opacity-75 font-semibold text-lg">
+                  <div className="opacity-75 font-semibold text-xl">
                     Total Additional Costs
                   </div>
-                  <div className="opacity-75 font-semibold text-lg">$6.9</div>
+                  <div className="opacity-75 font-semibold text-xl">$6.9</div>
                 </div>
               </div>
               <div className="flex flex-col gap-5">
