@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
-import Image from 'next/image';
-import { TrashIcon } from '@heroicons/react/24/solid';
+import React, { FC } from "react";
+import Image from "next/image";
+import { TrashIcon } from "@heroicons/react/24/solid";
 
 interface FriendProps {
   profilepicture: string;
@@ -9,20 +9,22 @@ interface FriendProps {
 
 const FriendComponent: FC<FriendProps> = ({ profilepicture, name }) => {
   return (
-    <div className='flex justify-between bg-white h-[72px] rounded-2xl shadow-lg backdrop-blur mt-3 min-w-60'>
-
-      <button className='flex-shrink-0'>
-        <div className='flex pl-6 py-4 items-center'>
-          <Image src={profilepicture} alt={name} width={40} height={40} className='rounded-full'/>
-          <h1 className='pl-3 font-bold text-base font-balsamiq-sans text-splitDarkBlue'>{name}</h1>
-        </div>
-      </button>
-      <div className='flex pr-6 items-center flex-shrink-0'>
-        <button>
-          <TrashIcon className='w-6 h-6 text-splitDarkBlue'></TrashIcon>
-        </button>
+    <div className="flex justify-between p-4 shadow-md rounded-md">
+      <div className="flex gap-2 items-center max-w-[calc(100%_-_32px)]">
+        <Image
+          src={profilepicture}
+          alt={name}
+          width={40}
+          height={40}
+          className="rounded-full"
+        />
+        <span className="font-bold font-balsamiq-sans text-splitDarkBlue truncate text-ellipsis">
+          {name}
+        </span>
       </div>
-      
+      <button>
+        <TrashIcon className="w-6 h-6 text-splitDarkBlue"></TrashIcon>
+      </button>
     </div>
   );
 };
