@@ -3,7 +3,7 @@ import cors from "cors";
 import errorHandler from "middleware-http-errors";
 import { validateRequest } from "./lib/middleware";
 import { UserSignupSchema } from "./schema/user.schema";
-import { loginUser } from "./functions/auth";
+import { signupUser } from "./functions/auth";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
@@ -21,7 +21,7 @@ app.post('/auth/signup', validateRequest(UserSignupSchema, "body"), async (req: 
         token: string;
         expiredBy: Date;
         userId: number;
-      } = await loginUser(username, password);
+      } = await signupUser(username, password);
       return res.status(200).json(result);
     } catch (err) {
       next(err);
