@@ -1,10 +1,5 @@
 "use client";
 
-import { useState, useMemo, FormEvent } from "react";
-import { useFormState, useFormStatus } from "react-dom";
-import { authenticate } from "@/app/lib/actions";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import Image from "next/image";
