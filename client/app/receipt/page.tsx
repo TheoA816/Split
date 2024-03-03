@@ -1,9 +1,16 @@
 import React from "react";
 import Navbar from "../header/navbar/nav";
 import Friend from "./friend";
+import receipt from "@/public/receipt.png";
+import avatar1 from "@/public/avatar_1.png";
+import avatar2 from "@/public/avatar_2.png";
 
 export default function page() {
   const items = [{ name: "Random item #1", qty: 2, price: 6.9 }];
+  const friends = [
+    { name: "Esther", isPaid: true, avatar: avatar1 },
+    { name: "Merry", isPaid: false, avatar: avatar2 },
+  ];
 
   return (
     <div>
@@ -11,14 +18,20 @@ export default function page() {
       <div className="flex text-splitBlue gap-20">
         <div className="w-1/2">
           <div className="flex flex-col">
-            <div>Your receipt</div>
-            <div className="flex flex-col border border-splitBlue px-10">
+            <div className="text-2xl font-bold text-splitDarkBlue mb-5">
+              Your receipt
+            </div>
+            <div className="flex flex-col border border-splitBlue px-10 gap-10 py-10">
               <div className="flex flex-col items-center">
-                <div>Maccas Bill</div>
-                <div>Randwick NSW 2031</div>
+                <div className="text-3xl font-bold text-splitDarkBlue">
+                  Maccas Bill
+                </div>
+                <div className="text-sm">Randwick NSW 2031</div>
               </div>
-              <div className="flex flex-col">
-                <div>Items</div>
+              <div className="flex flex-col gap-3">
+                <div className="text-xl text-splitDarkBlue font-bold">
+                  Items
+                </div>
                 {items.map((item, idx) => (
                   <div key={idx} className="flex justify-between flex-1">
                     <div>
@@ -28,8 +41,12 @@ export default function page() {
                   </div>
                 ))}
                 <div className="flex justify-between">
-                  <div>Total</div>
-                  <div>$6.9</div>
+                  <div className="font-bold text-lg text-splitDarkBlue">
+                    Total
+                  </div>
+                  <div className="font-bold text-lg text-splitDarkBlue">
+                    $6.9
+                  </div>
                 </div>
               </div>
               <div className="flex flex-col gap-3">
@@ -43,9 +60,13 @@ export default function page() {
             </div>
           </div>
         </div>
-        <div className="flex-1">
+        <div className="flex-1 ml-10">
           <div>Recent Friends</div>
-          <Friend />
+          <div className="flex flex-col gap-3">
+            {friends.map((friend, idx) => (
+              <Friend key={idx} name={friend.name} isPaid={friend.isPaid} avatar={friend.avatar} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
