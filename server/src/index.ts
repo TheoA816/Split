@@ -9,7 +9,7 @@ import { readReceipt } from "./functions/ocr";
 import { error } from "console";
 
 const app = express();
-const port = process.env.PORT ?? 3000;
+const port = process.env.PORT ?? 3030;
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -22,14 +22,14 @@ app.post(
   "/auth/signup",
   validateRequest(UserSignupSchema, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log("Responding to POST /auth/login");
+    console.log("Responding to POST /auth/signup");
     try {
-      const { username, password } = req.body;
+      const { email, password } = req.body;
       const result: {
         token: string;
         expiredBy: Date;
         userId: number;
-      } = await signupUser(username, password);
+      } = await signupUser(email, password);
       return res.status(200).json(result);
     } catch (err) {
       next(err);
@@ -236,6 +236,27 @@ app.get(
     }
   },
 );
+
+app.get('/user/:userId', verifySession, (req: Request, res: Response, next: NextFunction) => {
+    console.log("Responding to /user/:userId");
+    try {
+        const id = Number(req.headers.id);
+        const user = prisma.user.findUnique({
+            where: {
+                id
+            },
+            select: {
+                email: true,
+                name: true,
+                profilePicture: true
+            }
+        });
+        console.log("Successful");
+        return { user };
+    } catch (err) {
+        next(err);
+    }
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
