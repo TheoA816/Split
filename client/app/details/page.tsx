@@ -7,12 +7,12 @@ import Image from "next/image";
 export default function page() {
   return (
     <div className="text-splitBlack50">
-      <button className="flex items-center gap-3 mb-7 ml-7">
-        <ArrowLeftIcon className="w-4 h-4" />
-        <div className="font-semibold text-lg">Back</div>
-      </button>
-      <div className="flex pb-10">
+      <div className="flex">
         <div className="px-16 py-10 flex-1 flex flex-col justify-center">
+          <button className="flex items-center gap-3 mb-7">
+            <ArrowLeftIcon className="w-4 h-4" />
+            <div className="font-semibold text-lg">Back</div>
+          </button>
           <div className="flex flex-col justify-center">
             <div className="flex flex-col gap-10">
               <div className="flex justify-between">
@@ -38,8 +38,8 @@ export default function page() {
                   <div className="opacity-75">$6.9</div>
                 </div>
                 <div className="flex justify-between">
-                  <div className="opacity-75 text-lg font-semibold">Total</div>
-                  <div className="opacity-75 text-lg font-semibold">$6.9</div>
+                  <div className="opacity-75 text-xl font-semibold">Total</div>
+                  <div className="opacity-75 text-xl font-semibold">$6.9</div>
                 </div>
               </div>
               <div>
@@ -51,10 +51,10 @@ export default function page() {
                   <div className="opacity-75">$6.9</div>
                 </div>
                 <div className="flex justify-between">
-                  <div className="opacity-75 font-semibold text-lg">
+                  <div className="opacity-75 font-semibold text-xl">
                     Total Additional Costs
                   </div>
-                  <div className="opacity-75 font-semibold text-lg">$6.9</div>
+                  <div className="opacity-75 font-semibold text-xl">$6.9</div>
                 </div>
               </div>
               <div className="flex flex-col gap-5">
