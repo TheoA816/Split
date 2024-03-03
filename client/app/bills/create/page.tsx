@@ -245,7 +245,7 @@ export default function Page() {
         <p>Username</p>
       </div>
       {participants.map((participant: Participant, index: number) => (
-        <div className="flex justify-between gap-6 items-center flex-wrap">
+        <div className="flex justify-between gap-6 items-center flex-wrap" key={index}>
           {/* <Image src={""} width={48} height={48} alt={participant.name} /> */}
           <div className="flex gap-4 items-center flex-wrap">
             <div className="h-10 w-10 rounded-full bg-splitBlue" />
