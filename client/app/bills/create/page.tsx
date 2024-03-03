@@ -4,14 +4,16 @@ import {
   ChangeEvent,
   SetStateAction,
   useCallback,
+  useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { format } from "date-fns";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { CalendarIcon, TrashIcon, PlusIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 
 type Item = {
@@ -61,13 +63,45 @@ export default function Page() {
     participants: [],
   };
 
+  const allFriends = [
+    { name: "Merry", email: "test", profilePicture: "" },
+    { name: "Esther", email: "test", profilePicture: "" },
+    { name: "Vella", email: "test", profilePicture: "" },
+    { name: "Theo", email: "test", profilePicture: "" },
+  ];
+
   const [title, setTitle] = useState<string>(data.title);
   const [date, setDate] = useState<Date>(data.date);
   const [total, setTotal] = useState<string>(data.total);
   const [items, setItems] = useState<Item[]>(data.items);
-  const [participants, setParticipants] = useState<Participant[]>(
-    data.participants
-  );
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [searchedParticipants, setSearchedParticipants] =
+    useState<Participant[]>(allFriends);
+  const [searchValue, setSearchValue] = useState("");
+  const [openFriendDropdown, setOpenFriendDropdown] = useState(false);
+
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node)
+      ) {
+        setOpenFriendDropdown(false);
+      }
+    }
+
+    // Bind the event listener only if the dropdown is open
+    if (openFriendDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openFriendDropdown]);
 
   const addItem = useCallback(() => {
     setItems([
@@ -87,7 +121,7 @@ export default function Page() {
       ((newItems[index] as Item)[key] as string) = value;
       setItems(newItems);
     },
-    [items]
+    [items],
   );
 
   const updateItemQuantity = useCallback(
@@ -97,7 +131,7 @@ export default function Page() {
       ((newItems[index] as Item)["quantity"] as number) = quantity;
       setItems(newItems);
     },
-    [items]
+    [items],
   );
 
   const removeItem = useCallback(
@@ -106,7 +140,7 @@ export default function Page() {
       newItems.splice(index, 1);
       setItems(newItems);
     },
-    [items]
+    [items],
   );
 
   // need a way to collect all participants
@@ -118,7 +152,7 @@ export default function Page() {
       newParticipants.splice(index, 1);
       setParticipants(newParticipants);
     },
-    [participants]
+    [participants],
   );
 
   // dummy function
@@ -132,10 +166,28 @@ export default function Page() {
       isNumeric(total) &&
       items.every(
         (item: Item) =>
-          item.name && isNumeric(item.cost) && Number.isInteger(item.quantity)
+          item.name && isNumeric(item.cost) && Number.isInteger(item.quantity),
       ),
-    [title, date, total, items]
+    [title, date, total, items],
   );
+
+  // search friend
+  const filterParticipant = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+    setSearchedParticipants(() => {
+      return allFriends.filter((participant) =>
+        participant.name.toLowerCase().includes(e.target.value.toLowerCase()),
+      );
+    });
+  };
+
+  const addParticipant = (
+    name: string,
+    email: string,
+    profilePicture: string,
+  ) => {
+    setParticipants((prev) => [...prev, { name, email, profilePicture }]);
+  };
 
   return (
     <div className="text-splitDarkBlue space-y-8 mb-16">
@@ -189,7 +241,7 @@ export default function Page() {
             {["Quantity", "Name", "Cost"].map(
               (heading: string, index: number) => (
                 <p key={index}>{heading}</p>
-              )
+              ),
             )}
           </div>
           <div className="grid grid-cols-4 gap-2">
@@ -238,14 +290,59 @@ export default function Page() {
         Add item
       </button>
       {/** Participants **/}
-      <p className="font-bold text-xl">Add friends to split with</p>
+      <div>
+        <p className="font-bold text-xl">Add friends to split with</p>
+        <div className="relative" ref={searchContainerRef}>
+          <input
+            className="h-10 border w-full rounded-md pl-3"
+            placeholder="Search friend"
+            onChange={filterParticipant}
+            value={searchValue}
+            onClick={() => setOpenFriendDropdown(true)}
+          ></input>
+          {openFriendDropdown && (
+            <div className="bg-splitWhite z-20 border border-splitDarkBlue flex flex-col h-40 overflow-y-auto absolute top-full w-full">
+              {searchedParticipants.map(
+                (participant: Participant, index: number) => (
+                  <button
+                    className="flex justify-between gap-6 items-center flex-wrap hover:bg-gray-500 px-3 py-2"
+                    key={index}
+                    onClick={() =>
+                      addParticipant(
+                        participant.name,
+                        participant.email,
+                        participant.profilePicture,
+                      )
+                    }
+                  >
+                    {/* <Image src={""} width={48} height={48} alt={participant.name} /> */}
+                    <div className="flex gap-4 items-center flex-wrap">
+                      <div className="h-10 w-10 rounded-full bg-splitBlue" />
+                      <p>{participant.name}</p>
+                    </div>
+                    <button className="ml-auto">
+                      <PlusIcon className="w-4 h-4 duration-200 hover:text-splitDarkBlue/85"></PlusIcon>
+                    </button>
+                  </button>
+                ),
+              )}
+            </div>
+          )}
+        </div>
+      </div>
       {/** Information of current user **/}
-      <div className="flex gap-4 items-center flex-wrap">
-        <div className="h-10 w-10 rounded-full bg-splitBlue" />
-        <p>Username</p>
+      <div className="flex justify-between gap-6 items-center flex-wrap">
+        {/* <Image src={""} width={48} height={48} alt={participant.name} /> */}
+        <div className="flex gap-4 items-center flex-wrap">
+          <div className="h-10 w-10 rounded-full bg-splitBlue" />
+          <p>Your name</p>
+        </div>
       </div>
       {participants.map((participant: Participant, index: number) => (
-        <div className="flex justify-between gap-6 items-center flex-wrap" key={index}>
+        <div
+          className="flex justify-between gap-6 items-center flex-wrap"
+          key={index}
+        >
           {/* <Image src={""} width={48} height={48} alt={participant.name} /> */}
           <div className="flex gap-4 items-center flex-wrap">
             <div className="h-10 w-10 rounded-full bg-splitBlue" />
