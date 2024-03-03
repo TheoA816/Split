@@ -35,10 +35,17 @@ const EditIcon = () => (
   </svg>
 );
 
-export default function InputReceipt() {
+type InputReceiptProps = {
+  openPopup: () => void;
+};
+
+export default function InputReceipt({ openPopup }: InputReceiptProps) {
   return (
     <div className="flex flex-col md:flex-row gap-4">
-      <Button className="py-4 px-8 flex gap-3 rounded-full text-white bg-splitDarkBlue text-md">
+      <Button
+        className="py-4 px-8 flex gap-3 rounded-full text-white bg-splitDarkBlue text-md"
+        onClick={openPopup}
+      >
         <ScanIcon />
         Scan a receipt
       </Button>

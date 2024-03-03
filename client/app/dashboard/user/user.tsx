@@ -52,7 +52,11 @@ const userCards = [
   },
 ];
 
-export default function User() {
+type UserProps = {
+  openPopup: () => void;
+};
+
+export default function User({ openPopup }: UserProps) {
   return (
     <div className="pb-8">
       <div className="flex justify-between items-center pb-8">
@@ -62,7 +66,7 @@ export default function User() {
             This is what we&apos;ve got for you today
           </div>
         </div>
-        <InputReceipt />
+        <InputReceipt openPopup={openPopup} />
       </div>
       <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-evenly xl:justify-between items-center gap-4 w-full">
         {userCards.map((card) => (
