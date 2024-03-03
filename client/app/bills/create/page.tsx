@@ -301,7 +301,7 @@ export default function Page() {
             onClick={() => setOpenFriendDropdown(true)}
           ></input>
           {openFriendDropdown && (
-            <div className="bg-splitWhite z-20 border border-splitDarkBlue flex flex-col h-40 overflow-y-auto absolute top-full w-full">
+            <div className="bg-splitWhite z-20 border border-splitDarkBlue flex flex-col max-h-40 overflow-y-auto absolute top-full w-full">
               {searchedParticipants.map(
                 (participant: Participant, index: number) => (
                   <button
