@@ -158,7 +158,7 @@ app.get(
           name: "asc",
         },
       });
-      return { friends };
+      return res.status(200).json({ friends });
     } catch (err) {
       next(err);
     }
@@ -191,7 +191,7 @@ app.get(
           title: "asc",
         },
       });
-      return { histories };
+      return res.status(200).json({ histories });
     } catch (err) {
       next(err);
     }
@@ -230,18 +230,18 @@ app.get(
           owed: true,
         },
       });
-      return { totalExpenses, userOwed, peopleOwed };
+      return res.status(200).json({ totalExpenses, userOwed, peopleOwed });
     } catch (err) {
       next(err);
     }
   },
 );
 
-app.get('/user/:userId', verifySession, (req: Request, res: Response, next: NextFunction) => {
-    console.log("Responding to /user/:userId");
+app.get('/user', verifySession, async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Responding to /user");
     try {
         const id = Number(req.headers.id);
-        const user = prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: {
                 id
             },
@@ -251,8 +251,7 @@ app.get('/user/:userId', verifySession, (req: Request, res: Response, next: Next
                 profilePicture: true
             }
         });
-        console.log("Successful");
-        return { user };
+        return res.status(200).json({ user });
     } catch (err) {
         next(err);
     }

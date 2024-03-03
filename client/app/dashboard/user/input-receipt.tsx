@@ -38,11 +38,11 @@ const EditIcon = () => (
 export default function InputReceipt() {
   return (
     <div className="flex flex-col md:flex-row gap-4">
-      <Button className="py-4 px-8 flex gap-3 rounded-full text-white bg-splitDarkBlue text-md">
+      <Button className="py-4 px-8 flex gap-3 rounded-full text-white bg-splitDarkBlue text-md hover:bg-splitDarkBlue/75">
         <ScanIcon />
         Scan a receipt
       </Button>
-      <Button className="py-4 px-8 flex gap-3 rounded-full text-splitDarkBlue bg-white border border-splitDarkBlue text-md">
+      <Button className="py-4 px-8 flex gap-3 rounded-full text-splitDarkBlue bg-white border border-splitDarkBlue text-md hover:text-splitDarkBlue/50 hover:bg-transparent">
         <EditIcon />
         Input manually
       </Button>
