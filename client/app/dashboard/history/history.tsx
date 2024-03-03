@@ -27,7 +27,7 @@ export default function History() {
         {},
         { authorization: user.authorization, id: user.id }
       );
-      setHistory(history);
+      setHistory(history.histories);
     };
     fetchHistory();
   }, [user.authorization, user.id]);

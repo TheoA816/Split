@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import getHash from "./hash";
 import prisma from "./prisma";
 
 export const generateToken = (userId: number) => {
@@ -13,7 +12,7 @@ export const generateToken = (userId: number) => {
 
 export const verifyToken = async (
   token: string | undefined,
-  userId: number | undefined,
+  userId: number | undefined
 ) => {
   const secret = process.env.JWT_SECRET as string;
 
@@ -24,7 +23,7 @@ export const verifyToken = async (
   const cleanedToken = token.split(" ")[1];
   const tokenExists = await prisma.token.findFirst({
     where: {
-      token: getHash(cleanedToken as string),
+      token: cleanedToken as string,
     },
   });
   try {
@@ -36,7 +35,7 @@ export const verifyToken = async (
     if (err.name === "TokenExpiredError" && tokenExists) {
       await prisma.token.delete({
         where: {
-          token: getHash(cleanedToken as string),
+          token: cleanedToken as string,
         },
       });
     }

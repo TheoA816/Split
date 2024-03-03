@@ -18,17 +18,6 @@ import { get, post } from "@/lib/request";
 import { useSession } from "next-auth/react";
 import { Friend } from "@/lib/types";
 
-const avatars = [
-  {
-    profilePic: "/avatar_1.png",
-    username: "Esther",
-  },
-  {
-    profilePic: "/avatar_2.png",
-    username: "Merry",
-  },
-];
-
 export default function Friends() {
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState("");
@@ -41,6 +30,7 @@ export default function Friends() {
     username: string;
     profilePicture: string;
   };
+  console.log(session);
 
   // TODO - given time, store in local storage / react context instead of pulling same data over and over
   useEffect(() => {
@@ -48,12 +38,13 @@ export default function Friends() {
       const friends = await get(
         "/friends",
         {},
-        { authorization: user.authorization }
+        { authorization: user.authorization, id: user.id }
       );
-      setFriends(friends);
+      const { friends: friendList } = friends;
+      setFriends(friendList);
     };
     fetchFriends();
-  }, [user.authorization]);
+  }, [user.authorization, user.id]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -65,7 +56,6 @@ export default function Friends() {
         id: user.id,
       }
     );
-    console.log(res);
   };
 
   return (
@@ -126,7 +116,7 @@ export default function Friends() {
         {friends.map((friend) => (
           <Avatar
             key={friend.name}
-            url={friend.profilePic}
+            url={friend.profilePicture}
             username={friend.name}
           />
         ))}

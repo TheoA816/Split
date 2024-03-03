@@ -27,13 +27,14 @@ export default function Page() {
         {},
         { authorization: user.authorization, id: user.id }
       );
-      setFriends(friends);
+      const { friends: friendList } = friends;
+      setFriends(friendList);
     };
     fetchFriends();
   }, [user.authorization, user.id]);
 
   return (
-    <>
+    <div className="px-12">
       <Navbar />
       <div className="">
         <h1 className="font-bold text-3xl font-balsamiq-sans text-splitDarkBlue pb-3">
@@ -48,12 +49,12 @@ export default function Page() {
           {friends.map((friend) => (
             <FriendComponent
               key={friend.name}
-              profilepicture={friend.profilePic}
+              profilepicture={friend.profilePicture}
               name={friend.name}
             />
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }

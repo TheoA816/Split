@@ -1,4 +1,4 @@
-export type Friend = { email: string; name: string; profilePic: string };
+export type Friend = { email: string; name: string; profilePicture: string };
 export type BillOverview = {
   id: number;
   userId: number;

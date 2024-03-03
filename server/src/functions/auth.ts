@@ -1,12 +1,11 @@
 import prisma from "../lib/prisma";
-import getHash from "../lib/hash";
 import HttpError from "http-errors";
 import { generateToken } from "../lib/token";
 import validator from "validator";
 
 export const signupUser = async (
   email: string,
-  password: string,
+  password: string
 ): Promise<{ token: string; expiredBy: Date; userId: number }> => {
   // Check if email or password is valid
   if (!email || !password || !validator.isEmail(email)) {
@@ -44,7 +43,7 @@ export const signupUser = async (
   const { token: newGeneratedToken, expiredBy } = generateToken(user.id);
   await prisma.token.create({
     data: {
-      token: getHash(newGeneratedToken),
+      token: newGeneratedToken,
       userId: user.id,
       expiredBy,
     },
@@ -63,7 +62,7 @@ export const signoutUser = async (token: string): Promise<object> => {
   // Delete token immediately
   await prisma.token.delete({
     where: {
-      token: getHash(token),
+      token: token,
     },
   });
   console.log(`Token ${token} deleted.`);

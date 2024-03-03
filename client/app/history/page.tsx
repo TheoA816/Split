@@ -26,13 +26,13 @@ export default function History() {
         {},
         { authorization: user.authorization, id: user.id }
       );
-      setHistory(history);
+      setHistory(history.histories);
     };
     fetchHistory();
   }, [user.authorization, user.id]);
 
   return (
-    <>
+    <div className="px-12">
       <Navbar />
       <div className="">
         <div className="font-bold text-2xl text-splitDarkBlue">
@@ -44,6 +44,6 @@ export default function History() {
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }

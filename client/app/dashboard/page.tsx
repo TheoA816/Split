@@ -5,13 +5,13 @@ import Navbar from "../header/navbar/nav";
 
 export default function Dashboard() {
   return (
-    <>
+    <div className="px-12">
       <Navbar />
       <div>
         <User />
         <Friends />
         <History />
       </div>
-    </>
+    </div>
   );
 }

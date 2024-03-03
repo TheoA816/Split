@@ -1,16 +1,16 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
-import errorHandler from "middleware-http-errors";
 import { validateRequest, verifySession } from "./lib/middleware";
 import { UserSignupSchema } from "./schema/user.schema";
 import { signoutUser, signupUser } from "./functions/auth";
 import prisma from "./lib/prisma";
 import { readReceipt } from "./functions/ocr";
-import { error } from "console";
+import { corsOptions } from "./lib/corsOptions";
 
 const app = express();
 const port = process.env.PORT ?? 3030;
 app.use(express.json());
+app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -237,25 +237,30 @@ app.get(
   }
 );
 
-app.get('/user', verifySession, async (req: Request, res: Response, next: NextFunction) => {
+app.get(
+  "/user",
+  verifySession,
+  async (req: Request, res: Response, next: NextFunction) => {
     console.log("Responding to /user");
     try {
-        const id = Number(req.headers.id);
-        const user = await prisma.user.findUnique({
-            where: {
-                id
-            },
-            select: {
-                email: true,
-                name: true,
-                profilePicture: true
-            }
-        });
-        return res.status(200).json({ user });
+      const id = Number(req.headers.id);
+      const user = await prisma.user.findUnique({
+        where: {
+          id,
+        },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          profilePicture: true,
+        },
+      });
+      return res.status(200).json({ user });
     } catch (err) {
-        next(err);
+      next(err);
     }
-});
+  }
+);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
