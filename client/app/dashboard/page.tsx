@@ -5,9 +5,14 @@ import History from "@/app/dashboard/history/history";
 import Navbar from "../header/navbar/nav";
 import Popup from "./scan-receipt/popup";
 import { useState } from "react";
+import { headers } from "next/headers";
 
 export default function Dashboard() {
   const [openPopup, setOpenPopup] = useState(false);
+  const handleReceiptUpload = async () => {
+    const res = await fetch('/read-receipt')
+    const data = await res.json()
+  }
 
   return (
     <div>
