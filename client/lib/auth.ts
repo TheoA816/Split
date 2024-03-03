@@ -21,7 +21,7 @@ export const options: NextAuthOptions = {
           email: credentials?.email,
           password: credentials?.password,
         });
-        const user = await get(
+        const { user } = await get(
           "/user",
           {},
           {

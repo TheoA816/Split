@@ -1,19 +1,16 @@
 import express, { NextFunction, Request, Response, response } from "express";
 import cors from "cors";
-import errorHandler from "middleware-http-errors";
 import { validateRequest, verifySession } from "./lib/middleware";
 import { UserSignupSchema } from "./schema/user.schema";
 import { signoutUser, signupUser } from "./functions/auth";
 import prisma from "./lib/prisma";
 import { readReceipt } from "./functions/ocr";
-import { error } from "console";
-import { request } from "http";
-import { BillSchema, ParticipantSchema } from "./schema/bill.schema";
-import z from "zod";
+import { corsOptions } from "./lib/corsOptions";
 
 const app = express();
 const port = process.env.PORT ?? 3030;
 app.use(express.json());
+app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -252,6 +249,10 @@ app.get(
           id,
         },
         select: {
+<<<<<<< HEAD
+          id: true,
+=======
+>>>>>>> master
           email: true,
           name: true,
           profilePicture: true,
@@ -263,6 +264,8 @@ app.get(
     }
   }
 );
+<<<<<<< HEAD
+=======
 
 app.post(
   "/bill/create",
@@ -359,6 +362,7 @@ app.get(
     }
   }
 );
+>>>>>>> master
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

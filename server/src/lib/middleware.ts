@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodSchema } from "zod";
 import jwt from "jsonwebtoken";
-import getHash from "./hash";
 import prisma from "./prisma";
 
 export const validateRequest = (
   schema: ZodSchema,
-  property: "body" | "query",
+  property: "body" | "query"
 ) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const result = schema.safeParse(req[property]);
@@ -24,12 +23,11 @@ export const validateRequest = (
 export const verifySession = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const secret = process.env.JWT_SECRET as string;
   const { authorization: token } = req.headers;
   const id = Number(req.headers.id);
-
   if (!token || !(token as string).startsWith("Bearer") || !id) {
     return res.status(403).json({
       error: "Unauthorised",
@@ -39,7 +37,7 @@ export const verifySession = async (
   const cleanedToken = token.split(" ")[1];
   const tokenExists = await prisma.token.findFirst({
     where: {
-      token: getHash(cleanedToken as string),
+      token: cleanedToken as string,
     },
   });
 
@@ -53,7 +51,7 @@ export const verifySession = async (
       if (tokenExists)
         await prisma.token.delete({
           where: {
-            token: getHash(cleanedToken as string),
+            token: cleanedToken as string,
           },
         });
       return res.status(403).json({ message: "Expired token" });

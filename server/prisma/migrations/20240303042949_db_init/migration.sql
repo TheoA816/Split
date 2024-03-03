@@ -25,6 +25,7 @@ CREATE TABLE "Item" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "cost" DOUBLE PRECISION NOT NULL,
+    "quantity" INTEGER NOT NULL,
     "billId" INTEGER,
 
     CONSTRAINT "Item_pkey" PRIMARY KEY ("id")
