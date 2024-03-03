@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const ScanIcon = () => (
   <svg
@@ -42,10 +43,13 @@ export default function InputReceipt() {
         <ScanIcon />
         Scan a receipt
       </Button>
-      <Button className="py-4 px-8 flex gap-3 rounded-full text-splitDarkBlue bg-white border border-splitDarkBlue text-md hover:text-splitDarkBlue/50 hover:bg-transparent">
+      <Link
+        href="/bills/create"
+        className="py-4 px-8 flex gap-3 rounded-full text-splitDarkBlue bg-white border border-splitDarkBlue text-md hover:text-splitDarkBlue/50 hover:bg-transparent"
+      >
         <EditIcon />
         Input manually
-      </Button>
+      </Link>
     </div>
   );
 }

@@ -6,6 +6,8 @@ import { signoutUser, signupUser } from "./functions/auth";
 import prisma from "./lib/prisma";
 import { readReceipt } from "./functions/ocr";
 import { corsOptions } from "./lib/corsOptions";
+import { BillSchema, ParticipantSchema } from "./schema/bill.schema";
+import { z } from "zod";
 
 const app = express();
 const port = process.env.PORT ?? 3030;
@@ -249,10 +251,7 @@ app.get(
           id,
         },
         select: {
-<<<<<<< HEAD
           id: true,
-=======
->>>>>>> master
           email: true,
           name: true,
           profilePicture: true,
@@ -264,8 +263,6 @@ app.get(
     }
   }
 );
-<<<<<<< HEAD
-=======
 
 app.post(
   "/bill/create",
@@ -362,7 +359,6 @@ app.get(
     }
   }
 );
->>>>>>> master
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

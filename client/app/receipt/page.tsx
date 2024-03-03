@@ -13,7 +13,7 @@ export default function page() {
   ];
 
   return (
-    <div>
+    <div className="px-12">
       <Navbar />
       <div className="flex text-splitBlue gap-20">
         <div className="w-1/2">
@@ -64,7 +64,12 @@ export default function page() {
           <div>Recent Friends</div>
           <div className="flex flex-col gap-3">
             {friends.map((friend, idx) => (
-              <Friend key={idx} name={friend.name} isPaid={friend.isPaid} avatar={friend.avatar} />
+              <Friend
+                key={idx}
+                name={friend.name}
+                isPaid={friend.isPaid}
+                avatar={friend.avatar}
+              />
             ))}
           </div>
         </div>
