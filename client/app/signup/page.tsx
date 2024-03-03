@@ -10,6 +10,7 @@ import signUpArtwork from "../assets/signup-artwork.svg";
 import signUpKey from "../assets/signup-key.svg";
 
 import { redirect } from "next/navigation";
+import clsx from "clsx";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -35,10 +36,8 @@ export default function SignUpPage() {
       setLoading(false);
 
       if (!res?.error) {
-        console.log("lol1");
-        redirect("/dashboard");
+        router.push("/dashboard");
       } else {
-        console.log(res.error);
         setError("Invalid username or password");
       }
     } catch (err: any) {
@@ -88,7 +87,24 @@ export default function SignUpPage() {
             className="bg-splitDarkBlue text-white font-bold p-6 hover:bg-splitDarkBlue/75 duration-200 disabled:bg-splitDarkBlue/25 rounded-lg"
             disabled={!readyToSubmit || loading}
           >
-            Sign up
+            {loading ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="animate-spin"
+              >
+                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+              </svg>
+            ) : (
+              <p>Sign up</p>
+            )}
           </Button>
           {/* <Button
             className="bg-white text-splitBlue opacity-50 border-solid rounded-2xl flex-grow pl-4 h-14 hover:bg-opacity-25 hover:text-white border-splitBlue border"

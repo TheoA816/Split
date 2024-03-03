@@ -21,17 +21,14 @@ export const options: NextAuthOptions = {
           email: credentials?.email,
           password: credentials?.password,
         });
-        console.log(res);
-        if (res.errorCode) return null;
         const user = await get(
-          `/user/${res.userId}`,
+          "/user",
           {},
           {
             authorization: res.token,
             id: res.userId,
           }
         );
-        console.log(user);
         return {
           token: res.token,
           id: user.id,
