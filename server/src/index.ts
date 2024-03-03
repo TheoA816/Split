@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { NextFunction, Request, Response, response } from "express";
 import cors from "cors";
 import { validateRequest, verifySession } from "./lib/middleware";
 import { UserSignupSchema } from "./schema/user.schema";
@@ -249,7 +249,10 @@ app.get(
           id,
         },
         select: {
+<<<<<<< HEAD
           id: true,
+=======
+>>>>>>> master
           email: true,
           name: true,
           profilePicture: true,
@@ -261,6 +264,105 @@ app.get(
     }
   }
 );
+<<<<<<< HEAD
+=======
+
+app.post(
+  "/bill/create",
+  [verifySession, validateRequest(BillSchema, "body")],
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Responding to /bill/create");
+    try {
+      const id = Number(req.headers.id);
+      const { title, items, participants } = req.body;
+      const newBill = await prisma.bill.create({
+        data: {
+          title,
+          userId: id,
+          completed: false,
+          createdAt: new Date(),
+          items: {
+            create: items,
+          },
+        },
+      });
+      const listOfParticipants = participants.map(
+        async (participant: z.infer<typeof ParticipantSchema>) => {
+          const user = await prisma.user.findUnique(participant.email);
+          return {
+            id: user?.id,
+            paid: participant.paid,
+            owed: participant.owed,
+          };
+        }
+      );
+      const addAllParticipants = await prisma.billToUser.createMany(
+        listOfParticipants.map(
+          (participant: { id: number; paid: number; owed: number }) => ({
+            userId: participant.id,
+            billId: newBill.id,
+            owed: participant.owed,
+            paid: participant.paid,
+          })
+        )
+      );
+      return res.status(200).json({});
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+app.get(
+  "/bill/:id",
+  verifySession,
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Responding to /bill/:id");
+    try {
+      const id = Number(req.params.id);
+      const target = await prisma.bill.findUnique({
+        where: {
+          id,
+        },
+        select: {
+          title: true,
+          issuedBy: {
+            select: {
+              email: true,
+              name: true,
+              profilePicture: true,
+            },
+          },
+          completed: true,
+          createdAt: true,
+          items: {
+            select: {
+              name: true,
+              cost: true,
+              quantity: true,
+            },
+          },
+          BillToUser: {
+            select: {
+              user: {
+                select: {
+                  email: true,
+                  name: true,
+                  profilePicture: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!target) return res.status(400).json({ message: "Bill not found" });
+      return res.status(200).json(target);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+>>>>>>> master
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
