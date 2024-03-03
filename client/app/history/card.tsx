@@ -1,7 +1,7 @@
 import { BillOverview } from "@/lib/types";
 import { format } from "date-fns";
 import Image from "next/image";
-import React from "react";
+import Link from "next/link";
 
 export default function Card({ bill }: { bill: BillOverview }) {
   const total = bill.items.reduce((acc, item) => acc + item.cost, 0);
@@ -37,9 +37,12 @@ export default function Card({ bill }: { bill: BillOverview }) {
         <div className="text-splitBlack50 opacity-50 text-sm">
           {format(bill.createdAt, "MMM Do yyyy • HH:mm")}
         </div>
-        <button className="border border-splitBlack50 border-opacity-50 rounded-2xl px-6 py-1 text-splitDarkBlue hover:shadow-md hover:bg-splitDarkBlue hover:text-white duration-200 hover:shadow-splitDarkBlue/10">
+        <Link
+          href="/details"
+          className="border border-splitBlack50 border-opacity-50 rounded-2xl px-6 py-1 text-splitDarkBlue hover:shadow-md hover:bg-splitDarkBlue hover:text-white duration-200 hover:shadow-splitDarkBlue/10"
+        >
           View Details
-        </button>
+        </Link>
       </div>
     </div>
   );

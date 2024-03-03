@@ -13,7 +13,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${balsamiqSans.className} px-12`}>{children}</body>
+      <body className={`${balsamiqSans.className}`}>{children}</body>
     </html>
   );
 }
