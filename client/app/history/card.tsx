@@ -1,22 +1,31 @@
+import { BillOverview } from "@/lib/types";
+import { format } from "date-fns";
+import Image from "next/image";
 import React from "react";
 
-export default function Card() {
+export default function Card({ bill }: { bill: BillOverview }) {
+  const total = bill.items.reduce((acc, item) => acc + item.cost, 0);
+
   return (
     <div className="w-full shadow-md text-splitDarkBlue rounded-lg shadow-splitDarkBlue/10">
       <div className="flex items-center justify-between py-3 px-7">
         <div className="flex items-center gap-1.5">
           <div className="w-3 h-3 rounded-full bg-splitPink"></div>
-          <div>Maccas</div>
+          <div>{bill.title}</div>
         </div>
-        <div className="font-bold">$69.00 AUD</div>
+        <div className="font-bold">${total} AUD</div>
       </div>
       <div className="flex justify-between items-center border-y border-splitBlue/25 py-3 px-7">
         <div className="flex ml-2">
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <div
-              key={idx}
-              className="w-10 h-10 rounded-full bg-splitBlue -mx-2 border-white border"
-            ></div>
+          {bill.profilePics.map((pic) => (
+            <Image
+              src={pic}
+              width={40}
+              height={40}
+              alt="ProfilePicture"
+              key={pic}
+              className="-mx-2 border-white border"
+            ></Image>
           ))}
         </div>
         <div className="flex flex-col items-end">
@@ -26,7 +35,7 @@ export default function Card() {
       </div>
       <div className="flex justify-between py-3 items-center px-7">
         <div className="text-splitBlack50 opacity-50 text-sm">
-          Mar 1st 2024 · 00:33
+          {format(bill.createdAt, "MMM Do yyyy • HH:mm")}
         </div>
         <button className="border border-splitBlack50 border-opacity-50 rounded-2xl px-6 py-1 text-splitDarkBlue hover:shadow-md hover:bg-splitDarkBlue hover:text-white duration-200 hover:shadow-splitDarkBlue/10">
           View Details

@@ -42,6 +42,7 @@ export default function Friends() {
     profilePicture: string;
   };
 
+  // TODO - given time, store in local storage / react context instead of pulling same data over and over
   useEffect(() => {
     const fetchFriends = async () => {
       const friends = await get(

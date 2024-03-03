@@ -1,3 +1,5 @@
+"use client";
+
 import { get } from "@/util/request";
 import Navbar from "../header/navbar/nav";
 import FriendComponent from "./friend";
@@ -6,7 +8,7 @@ import { useSession } from "next-auth/react";
 import { Friend } from "@/lib/types";
 import { useEffect, useState } from "react";
 
-export default async function Page() {
+export default function Page() {
   const [friends, setFriends] = useState<Friend[]>([]);
 
   const { data: session } = useSession();
@@ -17,17 +19,18 @@ export default async function Page() {
     profilePicture: string;
   };
 
+  // TODO - given time, store in local storage / react context instead of pulling same data over and over
   useEffect(() => {
     const fetchFriends = async () => {
       const friends = await get(
         "/friends",
         {},
-        { authorization: user.authorization }
+        { authorization: user.authorization, id: user.id }
       );
       setFriends(friends);
     };
     fetchFriends();
-  }, [user.authorization]);
+  }, [user.authorization, user.id]);
 
   return (
     <>

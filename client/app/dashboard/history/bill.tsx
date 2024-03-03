@@ -1,4 +1,10 @@
-export default function Bill() {
+import { BillOverview } from "@/lib/types";
+import { format } from "date-fns";
+import Image from "next/image";
+
+export default function Bill({ bill }: { bill: BillOverview }) {
+  const total = bill.items.reduce((acc, item) => acc + item.cost, 0);
+
   return (
     <div className="min-w-80 shadow text-splitDarkBlue">
       {/* Top section */}
@@ -6,19 +12,23 @@ export default function Bill() {
         <div className="flex items-center gap-1.5">
           <div className="w-3 h-3 rounded-full bg-splitPink"></div>
           {/* Title */}
-          <div>Maccas</div>
+          <div>{bill.title}</div>
         </div>
-        <div className="font-bold">$69.00 AUD</div>
+        <div className="font-bold">${total} AUD</div>
       </div>
       {/* Middle section */}
       <div className="flex justify-between items-center border-y border-splitBlue py-3 px-5">
         <div className="flex ml-2">
           {/* Get Bill participants and profile pics */}
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <div
-              key={idx}
-              className="w-10 h-10 rounded-full bg-splitBlue -mx-2 border-white border"
-            ></div>
+          {bill.profilePics.map((pic) => (
+            <Image
+              src={pic}
+              width={40}
+              height={40}
+              alt="ProfilePicture"
+              key={pic}
+              className="-mx-2 border-white border"
+            ></Image>
           ))}
         </div>
         <div className="flex flex-col items-end">
@@ -29,8 +39,7 @@ export default function Bill() {
       {/* Bottom section */}
       <div className="flex justify-between items-center py-3 px-5">
         <div className="text-splitBlack50 opacity-50 text-sm">
-          {/* Date FNS this */}
-          Mar 1st 2024 . 00:33
+          {format(bill.createdAt, "MMM Do yyyy • HH:mm")}
         </div>
         {/* Add view function */}
         <button className="border border-splitBlack50 border-opacity-50 rounded-full px-6 py-1 text-splitDarkBlue">
