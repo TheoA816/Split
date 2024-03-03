@@ -4,8 +4,9 @@ export const readReceipt = async (req: Request, res: Response) => {
   try {
     const { receiptUrl } = req.body;
 
+    console.log(receiptUrl);
     const data = JSON.stringify({
-      file_url: receiptUrl,
+      file_data: receiptUrl,
     });
 
     const url = "https://api.veryfi.com/api/v8/partner/documents";

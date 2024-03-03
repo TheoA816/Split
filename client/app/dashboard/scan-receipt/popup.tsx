@@ -1,3 +1,4 @@
+"use client";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +12,7 @@ import React, { ChangeEvent, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowUpOnSquareIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
+import { post } from "@/lib/request";
 
 type PopupProps = {
   isOpen: boolean;
@@ -30,11 +32,35 @@ export default function Popup({ isOpen }: PopupProps) {
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files[0]) {
-      const fileUrl = URL.createObjectURL(files[0]);
-      setReceipt(fileUrl);
+      const reader = new FileReader();
 
-      // Optional: Revoke the object URL to free up memory when the component unmounts or you're done with the URL
-      return () => URL.revokeObjectURL(fileUrl);
+      reader.onloadend = () => {
+        // Use reader.result which contains the file's data as a base64 encoded string
+        setReceipt(reader.result as string);
+      };
+
+      reader.onerror = (error) => {
+        console.error("Error reading file:", error);
+        // Handle errors here
+      };
+
+      // Read the file as a Data URL (base64 encoded string)
+      reader.readAsDataURL(files[0]);
+    }
+  };
+
+  const handleReceiptUpload = async () => {
+    try {
+      const res = await fetch("http://localhost:3030/read-receipt", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ receiptUrl: receipt }),
+      });
+      console.log(res);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -65,7 +91,11 @@ export default function Popup({ isOpen }: PopupProps) {
         </button>
 
         <DialogFooter>
-          <Button type="submit" className="bg-splitDarkBlue hover:bg-splitBlue">
+          <Button
+            type="submit"
+            className="bg-splitDarkBlue hover:bg-splitBlue"
+            onClick={handleReceiptUpload}
+          >
             Upload
           </Button>
         </DialogFooter>
