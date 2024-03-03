@@ -1,18 +1,23 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Participants from "./participants";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import details from "@/public/details.png";
 import Image from "next/image";
+import Link from "next/link";
+import Popup from "./popup";
 
-export default function page() {
+export default function Page() {
+  const [openPopup, setOpenPopup] = useState(false);
+
   return (
     <div className="text-splitBlack50">
       <div className="flex">
         <div className="px-16 py-10 flex-1 flex flex-col justify-center">
-          <button className="flex items-center gap-3 mb-7">
+          <Link href="/history" className="flex items-center gap-3 mb-7">
             <ArrowLeftIcon className="w-4 h-4" />
             <div className="font-semibold text-lg">Back</div>
-          </button>
+          </Link>
           <div className="flex flex-col justify-center">
             <div className="flex flex-col gap-10">
               <div className="flex justify-between">
@@ -76,8 +81,9 @@ export default function page() {
             Confirm split bill
           </button>
         </div>
-        <Image src={details} alt="Details image" className="object-cover" />
+        <Image src={details} alt="Details image" className="flex-1" />
       </div>
+      {/* <Popup /> */}
     </div>
   );
 }
