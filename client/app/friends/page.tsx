@@ -45,20 +45,6 @@ export default function Page() {
   ];
 
   return (
-<<<<<<< HEAD
-    <div className="space-y-8">
-      <div className="space-y-4">
-        <h1 className="font-bold text-3xl font-balsamiq-sans text-splitDarkBlue">
-          Add friends
-        </h1>
-        <FriendRequest></FriendRequest>
-      </div>
-      <div className="space-y-4">
-        <h1 className="font-bold text-3xl font-balsamiq-sans text-splitDarkBlue">
-          Friends list
-        </h1>
-        <div className="grid gap-4 grid-cols-3">
-=======
     <>
       <Navbar />
       <div className="">
@@ -70,7 +56,10 @@ export default function Page() {
           Friends list
         </h1>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+<<<<<<< HEAD
 >>>>>>> deb9846 (padding changes + add navbar in pages individually)
+=======
+>>>>>>> 2f736e5 (chore: fix remaining merge conflict v2.0)
           {/* Loop through dummy data array */}
           {dummyData.map((friend, index) => (
             <FriendComponent
@@ -81,10 +70,10 @@ export default function Page() {
           ))}
         </div>
       </div>
-<<<<<<< HEAD
-    </div>
-=======
     </>
+<<<<<<< HEAD
 >>>>>>> deb9846 (padding changes + add navbar in pages individually)
+=======
+>>>>>>> 2f736e5 (chore: fix remaining merge conflict v2.0)
   );
 }
