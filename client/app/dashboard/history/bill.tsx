@@ -1,6 +1,6 @@
 export default function Bill() {
   return (
-    <div className="w-80 shadow text-splitDarkBlue">
+    <div className="min-w-80 shadow text-splitDarkBlue">
       {/* Top section */}
       <div className="flex items-center justify-between py-3 px-5">
         <div className="flex items-center gap-1.5">

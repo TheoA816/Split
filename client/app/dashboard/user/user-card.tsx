@@ -7,8 +7,7 @@ export default function UserCard({
   bgClass,
   icon,
   iconClass,
-  iconBot,
-  iconRight,
+  imgClass,
 }: {
   label: string;
   amount: number;
@@ -16,8 +15,7 @@ export default function UserCard({
   bgClass: string;
   icon: React.ReactNode;
   iconClass: string;
-  iconBot: string;
-  iconRight: string;
+  imgClass: string;
 }) {
   return (
     <div
@@ -39,7 +37,7 @@ export default function UserCard({
       <img
         src={`${bgUrl}`}
         alt="BgImg"
-        className={`absolute -z-10 bottom-${iconBot} right-${iconRight}`}
+        className={`absolute -z-10 ${imgClass}`}
       ></img>
     </div>
   );

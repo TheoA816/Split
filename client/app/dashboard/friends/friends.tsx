@@ -35,7 +35,11 @@ export default function Friends() {
         </div>
         {/* Friends */}
         {avatars.map((avatar) => (
-          <Avatar url={avatar.profilePic} username={avatar.username} />
+          <Avatar
+            key={avatar.username}
+            url={avatar.profilePic}
+            username={avatar.username}
+          />
         ))}
       </div>
     </div>
