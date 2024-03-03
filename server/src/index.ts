@@ -34,7 +34,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 app.post(
@@ -49,7 +49,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 app.post(
@@ -87,7 +87,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 app.post(
@@ -132,7 +132,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 app.get(
@@ -162,7 +162,7 @@ app.get(
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 app.get(
@@ -195,7 +195,7 @@ app.get(
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 app.get(
@@ -234,7 +234,7 @@ app.get(
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 app.listen(port, () => {

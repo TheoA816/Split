@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { get, post } from "@/util/request";
 import { useSession } from "next-auth/react";
+import { Friend } from "@/lib/types";
 
 const avatars = [
   {
@@ -28,12 +29,18 @@ const avatars = [
   },
 ];
 
-export type Friend = { email: string; name: string; profilePic: string };
-
 export default function Friends() {
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState("");
   const [friends, setFriends] = useState<Friend[]>([]);
+
+  const { data: session } = useSession();
+  const user = session?.user as {
+    authorization: string;
+    id: string;
+    username: string;
+    profilePicture: string;
+  };
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -45,15 +52,7 @@ export default function Friends() {
       setFriends(friends);
     };
     fetchFriends();
-  }, []);
-
-  const { data: session } = useSession();
-  const user = session?.user as {
-    authorization: string;
-    id: string;
-    username: string;
-    profilePicture: string;
-  };
+  }, [user.authorization]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
