@@ -81,9 +81,9 @@ export default function Page() {
             Confirm split bill
           </button>
         </div>
-        <Image src={details} alt="Details image" className="object-cover" />
+        <Image src={details} alt="Details image" className="flex-1" />
       </div>
-      <Popup />
+      {/* <Popup /> */}
     </div>
   );
 }
