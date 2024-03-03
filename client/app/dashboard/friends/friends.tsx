@@ -1,19 +1,63 @@
+"use client";
 import Link from "next/link";
 import { ArrowRightIcon, PlusIcon } from "@heroicons/react/24/outline";
 import Avatar from "@/app/dashboard/friends/avatar";
-
-const avatars = [
-  {
-    profilePic: "/avatar_1.png",
-    username: "Esther",
-  },
-  {
-    profilePic: "/avatar_2.png",
-    username: "Merry",
-  },
-];
+import { FormEvent, useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { get, post } from "@/lib/request";
+import { useSession } from "next-auth/react";
+import { Friend } from "@/lib/types";
 
 export default function Friends() {
+  const [showModal, setShowModal] = useState(false);
+  const [email, setEmail] = useState("");
+  const [friends, setFriends] = useState<Friend[]>([]);
+
+  const { data: session } = useSession();
+  const user = session?.user as {
+    authorization: string;
+    id: string;
+    username: string;
+    profilePicture: string;
+  };
+  console.log(session);
+
+  // TODO - given time, store in local storage / react context instead of pulling same data over and over
+  useEffect(() => {
+    const fetchFriends = async () => {
+      const friends = await get(
+        "/friends",
+        {},
+        { authorization: user.authorization, id: user.id }
+      );
+      const { friends: friendList } = friends;
+      setFriends(friendList);
+    };
+    fetchFriends();
+  }, [user.authorization, user.id]);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const res = await post(
+      "/add/friend",
+      { email },
+      {
+        authorization: user.authorization,
+        id: user.id,
+      }
+    );
+  };
+
   return (
     <div className="flex flex-col gap-5 text-splitDarkBlue pb-8">
       {/* Top Section */}
@@ -26,19 +70,54 @@ export default function Friends() {
       </div>
       {/* Avatars - TODO (replace with actual friends later + Add friend button) */}
       <div className="flex gap-3">
-        {/* Add friend */}
+        {/* Add friend icon */}
         <div className="flex flex-col items-center">
-          <div className="flex justify-center items-center w-20 h-20 rounded-full border border-dashed border-splitDarkBlue">
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex justify-center items-center w-20 h-20 rounded-full border border-dashed border-splitDarkBlue"
+          >
             <PlusIcon className="w-8 h-8" />
-          </div>
+          </button>
           <span>Add friends</span>
         </div>
+        {/* Add friend modal */}
+        {showModal && (
+          <div className="w-screen h-screen fixed flex justify-center items-center top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-splitDarkBlue bg-opacity-50">
+            <Card typeof="form" className="w-[350px]">
+              <CardHeader>
+                <CardTitle>Add friend</CardTitle>
+                <CardDescription>Enter their email below!</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form id="addFriend" onSubmit={handleSubmit}>
+                  <div className="grid w-full items-center gap-4">
+                    <div className="flex flex-col space-y-1.5">
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        onChange={(e) => setEmail(e.target.value)}
+                        id="email"
+                      />
+                    </div>
+                  </div>
+                </form>
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <Button onClick={() => setShowModal(false)} variant="outline">
+                  Cancel
+                </Button>
+                <Button form="addFriend" type="submit">
+                  Add
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
+        )}
         {/* Friends */}
-        {avatars.map((avatar) => (
+        {friends.map((friend) => (
           <Avatar
-            key={avatar.username}
-            url={avatar.profilePic}
-            username={avatar.username}
+            key={friend.name}
+            url={friend.profilePicture}
+            username={friend.name}
           />
         ))}
       </div>

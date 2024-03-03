@@ -11,7 +11,7 @@ import { post } from "@/lib/request";
 export default function Dashboard() {
   const [openPopup, setOpenPopup] = useState(false);
   return (
-    <div>
+    <div className="px-12">
       <Navbar />
       <div>
         <User openPopup={() => setOpenPopup(true)} />

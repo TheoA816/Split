@@ -1,19 +1,18 @@
 import express, { NextFunction, Request, Response, response } from "express";
 import cors from "cors";
-import errorHandler from "middleware-http-errors";
 import { validateRequest, verifySession } from "./lib/middleware";
 import { UserSignupSchema } from "./schema/user.schema";
 import { signoutUser, signupUser } from "./functions/auth";
 import prisma from "./lib/prisma";
 import { readReceipt } from "./functions/ocr";
-import { error } from "console";
-import { request } from "http";
+import { corsOptions } from "./lib/corsOptions";
 import { BillSchema, ParticipantSchema } from "./schema/bill.schema";
-import z from "zod";
+import { z } from "zod";
 
 const app = express();
 const port = process.env.PORT ?? 3030;
 app.use(express.json());
+app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
