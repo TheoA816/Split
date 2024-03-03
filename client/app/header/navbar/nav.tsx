@@ -18,7 +18,11 @@ const HistoryIcon = () => (
 const navLinks = [
   {
     icon: <HomeIcon className="h-6 w-6" />,
+<<<<<<< HEAD
     url: "/",
+=======
+    url: "/dashboard",
+>>>>>>> ea2c009 (dashboard ui skeleton)
     label: "Home",
   },
   {
