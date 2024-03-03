@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 export default function Card() {
@@ -28,9 +29,12 @@ export default function Card() {
         <div className="text-splitBlack50 opacity-50 text-sm">
           Mar 1st 2024 · 00:33
         </div>
-        <button className="border border-splitBlack50 border-opacity-50 rounded-2xl px-6 py-1 text-splitDarkBlue hover:shadow-md hover:bg-splitDarkBlue hover:text-white duration-200 hover:shadow-splitDarkBlue/10">
+        <Link
+          href="/details"
+          className="border border-splitBlack50 border-opacity-50 rounded-2xl px-6 py-1 text-splitDarkBlue hover:shadow-md hover:bg-splitDarkBlue hover:text-white duration-200 hover:shadow-splitDarkBlue/10"
+        >
           View Details
-        </button>
+        </Link>
       </div>
     </div>
   );
