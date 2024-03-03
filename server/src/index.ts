@@ -37,7 +37,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 app.post(
@@ -52,7 +52,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 app.post(
@@ -90,7 +90,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 app.post(
@@ -135,7 +135,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 app.get(
@@ -165,7 +165,7 @@ app.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 app.get(
@@ -198,7 +198,7 @@ app.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 app.get(
@@ -237,7 +237,7 @@ app.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 app.get(
@@ -261,7 +261,7 @@ app.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 app.post(
@@ -291,7 +291,7 @@ app.post(
             paid: participant.paid,
             owed: participant.owed,
           };
-        }
+        },
       );
       const addAllParticipants = await prisma.billToUser.createMany(
         listOfParticipants.map(
@@ -300,14 +300,14 @@ app.post(
             billId: newBill.id,
             owed: participant.owed,
             paid: participant.paid,
-          })
-        )
+          }),
+        ),
       );
       return res.status(200).json({});
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 app.get(
@@ -357,7 +357,7 @@ app.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 app.listen(port, () => {
