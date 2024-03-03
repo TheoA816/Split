@@ -49,7 +49,7 @@ export default function InputReceipt({ openPopup }: InputReceiptProps) {
         <ScanIcon />
         Scan a receipt
       </Button>
-      <Button className="py-4 px-8 flex gap-3 rounded-full text-splitDarkBlue bg-white border border-splitDarkBlue text-md">
+      <Button className="py-4 px-8 flex gap-3 rounded-full text-splitDarkBlue bg-white border border-splitDarkBlue text-md hover:text-splitDarkBlue/50 hover:bg-transparent">
         <EditIcon />
         Input manually
       </Button>

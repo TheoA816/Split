@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { NextFunction, Request, Response, response } from "express";
 import cors from "cors";
 import errorHandler from "middleware-http-errors";
 import { validateRequest, verifySession } from "./lib/middleware";
@@ -7,9 +7,12 @@ import { signoutUser, signupUser } from "./functions/auth";
 import prisma from "./lib/prisma";
 import { readReceipt } from "./functions/ocr";
 import { error } from "console";
+import { request } from "http";
+import { BillSchema, ParticipantSchema } from "./schema/bill.schema";
+import z from "zod";
 
 const app = express();
-const port = process.env.PORT ?? 3000;
+const port = process.env.PORT ?? 3030;
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -22,19 +25,19 @@ app.post(
   "/auth/signup",
   validateRequest(UserSignupSchema, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log("Responding to POST /auth/login");
+    console.log("Responding to POST /auth/signup");
     try {
-      const { username, password } = req.body;
+      const { email, password } = req.body;
       const result: {
         token: string;
         expiredBy: Date;
         userId: number;
-      } = await signupUser(username, password);
+      } = await signupUser(email, password);
       return res.status(200).json(result);
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 app.post(
@@ -49,7 +52,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 app.post(
@@ -87,7 +90,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 app.post(
@@ -132,7 +135,7 @@ app.post(
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 app.get(
@@ -158,11 +161,11 @@ app.get(
           name: "asc",
         },
       });
-      return { friends };
+      return res.status(200).json({ friends });
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 app.get(
@@ -191,11 +194,11 @@ app.get(
           title: "asc",
         },
       });
-      return { histories };
+      return res.status(200).json({ histories });
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 app.get(
@@ -230,11 +233,131 @@ app.get(
           owed: true,
         },
       });
-      return { totalExpenses, userOwed, peopleOwed };
+      return res.status(200).json({ totalExpenses, userOwed, peopleOwed });
     } catch (err) {
       next(err);
     }
-  },
+  }
+);
+
+app.get(
+  "/user",
+  verifySession,
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Responding to /user");
+    try {
+      const id = Number(req.headers.id);
+      const user = await prisma.user.findUnique({
+        where: {
+          id,
+        },
+        select: {
+          email: true,
+          name: true,
+          profilePicture: true,
+        },
+      });
+      return res.status(200).json({ user });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+app.post(
+  "/bill/create",
+  [verifySession, validateRequest(BillSchema, "body")],
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Responding to /bill/create");
+    try {
+      const id = Number(req.headers.id);
+      const { title, items, participants } = req.body;
+      const newBill = await prisma.bill.create({
+        data: {
+          title,
+          userId: id,
+          completed: false,
+          createdAt: new Date(),
+          items: {
+            create: items,
+          },
+        },
+      });
+      const listOfParticipants = participants.map(
+        async (participant: z.infer<typeof ParticipantSchema>) => {
+          const user = await prisma.user.findUnique(participant.email);
+          return {
+            id: user?.id,
+            paid: participant.paid,
+            owed: participant.owed,
+          };
+        }
+      );
+      const addAllParticipants = await prisma.billToUser.createMany(
+        listOfParticipants.map(
+          (participant: { id: number; paid: number; owed: number }) => ({
+            userId: participant.id,
+            billId: newBill.id,
+            owed: participant.owed,
+            paid: participant.paid,
+          })
+        )
+      );
+      return res.status(200).json({});
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+app.get(
+  "/bill/:id",
+  verifySession,
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Responding to /bill/:id");
+    try {
+      const id = Number(req.params.id);
+      const target = await prisma.bill.findUnique({
+        where: {
+          id,
+        },
+        select: {
+          title: true,
+          issuedBy: {
+            select: {
+              email: true,
+              name: true,
+              profilePicture: true,
+            },
+          },
+          completed: true,
+          createdAt: true,
+          items: {
+            select: {
+              name: true,
+              cost: true,
+              quantity: true,
+            },
+          },
+          BillToUser: {
+            select: {
+              user: {
+                select: {
+                  email: true,
+                  name: true,
+                  profilePicture: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!target) return res.status(400).json({ message: "Bill not found" });
+      return res.status(200).json(target);
+    } catch (err) {
+      next(err);
+    }
+  }
 );
 
 app.listen(port, () => {
