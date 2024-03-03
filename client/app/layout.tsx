@@ -1,5 +1,8 @@
 import "@/app/globals.css";
 import { balsamiqSans } from "./fonts";
+import Provider from "@/lib/session-context";
+import { getServerSession } from "next-auth";
+import { options } from "@/lib/auth";
 
 export const metadata = {
   title: "Next.js",
@@ -11,9 +14,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(options);
+
   return (
     <html lang="en">
-      <body className={`${balsamiqSans.className}`}>{children}</body>
+      <Provider session={session}>
+        <body className={`${balsamiqSans.className}`}>{children}</body>
+      </Provider>
     </html>
   );
 }

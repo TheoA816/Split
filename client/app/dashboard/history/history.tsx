@@ -1,10 +1,10 @@
-"use-client";
+"use client";
 
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Bill from "./bill";
 import { useEffect, useState } from "react";
-import { get } from "@/util/request";
+import { get } from "@/lib/request";
 import { BillOverview } from "@/lib/types";
 import { useSession } from "next-auth/react";
 

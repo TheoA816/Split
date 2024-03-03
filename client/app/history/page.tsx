@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Card from "./card";
 import Navbar from "../header/navbar/nav";
 import { useSession } from "next-auth/react";
-import { get } from "@/util/request";
+import { get } from "@/lib/request";
 import { BillOverview } from "@/lib/types";
 
 export default function History() {

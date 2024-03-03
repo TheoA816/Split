@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { get, post } from "@/util/request";
+import { get, post } from "@/lib/request";
 import { useSession } from "next-auth/react";
 import { Friend } from "@/lib/types";
 

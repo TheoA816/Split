@@ -1,6 +1,6 @@
 "use client";
 
-import { get } from "@/util/request";
+import { get } from "@/lib/request";
 import Navbar from "../header/navbar/nav";
 import FriendComponent from "./friend";
 import { FriendRequest } from "./friendrequest";
